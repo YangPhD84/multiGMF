@@ -22,3 +22,56 @@ Installation has been tested in a Windows platform.
 * disease_PhS: disease phenotype similarity matrix;
 * disease_DoS: disease ontology similarity matrix;
 * didr: disease-drug association matrix.
+
+# Instructions
+We provide detailed step-by-step instructions for running multiGMF model.
+
+**Step 1**: add datasets paths
+```
+addpath('Datasets');
+```
+
+**Step 2**: load datasets with association matirx and similarity matrices
+```
+load  Gold_standard_dataset
+Wrr1 = drug_ChemS;
+Wrr2 = drug_AtcS;
+Wrr3 = drug_SideS;
+Wrr4 = drug_DDIS;
+Wrr5 = drug_TargetS;
+Wrr=(Wrr1+Wrr2+Wrr3+Wrr4+Wrr5)/5;
+R = {Wrr1, Wrr2, Wrr3, Wrr4, Wrr5};
+Wdd1 = disease_PhS;
+Wdd2 = disease_DoS;
+Wdd=(Wdd1+Wdd2)/2;
+D = {Wdd1, Wdd2};
+Wdr = didr;
+Wrd = Wdr';
+[dn, dr] = size(Wdr);
+min_mn = min(dn, dr);
+```
+
+**Step 3**: parameter Settings
+
+The hyper-parameters are fixed.
+```
+lambda1 = 0.0001;
+lambda2 = lambda1;
+lambda3 = 1;
+r = 0.9;
+k = 10;
+tau = 0.7;
+MaxIter = 300;
+tol1 = 2*1e-3;
+tol2 = 1*1e-4;
+```
+
+**Step 4**: run the multi-similarity geometric matrix factorization (multiGMF)
+```
+[W, H, iter] = multiGMF(Wrd,R,D,tau,Wrr,Wdd,r,k,MaxIter,lambda1,lambda2,lambda3,tol1,tol2);
+M_recovery = W * H';
+```
+
+# A Quickstart Guide
+Users can immediately start playing with multiGMF running  ``` Demo.m ``` in matlab.
+* ```Demo.m```: it demonstrates a process of predicting drug-disease associations on the gold standard dataset (Gold_standard_dataset) by multiGMF algorithm.
