@@ -5,7 +5,7 @@ To enable better integration of various drug and disease similarity data for min
 * Matlab >= 2020
 
 # Installation
-ITRPCA can be downloaded by
+multiGMF can be downloaded by
 ```
 git clone https://github.com/YangPhD84/multiGMF
 ```
@@ -68,13 +68,13 @@ tol2 = 1*1e-4;
 
 **Step 4**: run the multi-similarity geometric matrix factorization (multiGMF)
 ```
-[W, H, iter] = multiGMF(Wrd,R,D,tau,Wrr,Wdd,r,k,MaxIter,lambda1,lambda2,lambda3,tol1,tol2);
+[W, H, iter] = fmultiGMF(Wrd,R,D,tau,Wrr,Wdd,r,k,MaxIter,lambda1,lambda2,lambda3,tol1,tol2);
 M_recovery = W * H';
 ```
 
 # A Quickstart Guide
-Users can immediately start playing with multiGMF running ``` Demo.m ``` in matlab.
-* ```Demo.m```: it demonstrates a process of predicting drug-disease associations on the gold standard dataset (Gold_standard_dataset) by multiGMF algorithm.
+Users can immediately start playing with multiGMF running ``` Demo_multiGMF.m ``` in matlab.
+* ```Demo_multiGMF.m```: it demonstrates a process of predicting drug-disease associations on the gold standard dataset (Gold_standard_dataset) by multiGMF algorithm.
 
 # Contact
 If you have any questions or suggestions with the code, please let us know. Contact Mengyun Yang at mengyun_yang@126.com
