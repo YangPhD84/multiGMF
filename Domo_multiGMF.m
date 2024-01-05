@@ -30,5 +30,5 @@ tau = 0.7;
 MaxIter = 300;
 tol1 = 2*1e-3;
 tol2 = 1*1e-4;
-[W, H, iter] = multiGMF(Wrd,R,D,tau,Wrr,Wdd,r,k,MaxIter,lambda1,lambda2,lambda3,tol1,tol2);
+[W, H, iter] = fmultiGMF(Wrd,R,D,tau,Wrr,Wdd,r,k,MaxIter,lambda1,lambda2,lambda3,tol1,tol2);
 M_recovery = W * H';
