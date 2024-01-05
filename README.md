@@ -13,7 +13,7 @@ Installation has been tested in a Windows platform.
 
 # Datasets Description
 * Gold_standard_dataset.mat: this file contains information about the gold standard dataset;
-* CTDdataset2023.mat: this file contains information about the gold standard dataset;
+* CTDdataset2023.mat: this file contains information about our newly organized CTDdataset2023 dataset;
 * drug_ChemS: chemical structure similarity matrix;
 * drug_AtcS: drug's ATC code similarity matrix;
 * drug_SideS: side-effect similarity matrix;
