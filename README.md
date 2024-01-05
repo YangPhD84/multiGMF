@@ -73,5 +73,8 @@ M_recovery = W * H';
 ```
 
 # A Quickstart Guide
-Users can immediately start playing with multiGMF running  ``` Demo.m ``` in matlab.
+Users can immediately start playing with multiGMF running ``` Demo.m ``` in matlab.
 * ```Demo.m```: it demonstrates a process of predicting drug-disease associations on the gold standard dataset (Gold_standard_dataset) by multiGMF algorithm.
+
+# Contact
+If you have any questions or suggestions with the code, please let us know. Contact Mengyun Yang at mengyun_yang@126.com
