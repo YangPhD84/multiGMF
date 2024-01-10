@@ -23,7 +23,7 @@ function [W, H, iter] = multiGMF(M, R, D, tau, Wrr, Wdd, r, k, MaxIter, lambda1,
 % Email: yangbin_9966@163.com
 % Created: August 12, 2023
 
-X = WKNKN( M, Wrr, Wdd, k, r );
+X = WKNN( M, Wrr, Wdd, k, r );
 
 WH = X;
 [dr, dn] = size(X);
