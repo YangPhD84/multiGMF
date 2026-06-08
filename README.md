@@ -15,11 +15,12 @@ Installation has been tested on a Windows platform.
 * `Datasets/`: benchmark datasets used in the manuscript, including `Fdataset.mat`, `Cdataset.mat`, and `CTDdataset2023.mat`.
 * `Demo_multiGMF.m`: demo script for final prediction and case-study candidate ranking after model evaluation and parameter selection.
 * `multiGMF_10CV.m`: script for 10-fold cross-validation evaluation.
-* `multiGMF_Denovo.m`: script for drug-side cold-start evaluation. In the manuscript, this setting is referred to as cold-start testing.
+* `multiGMF_Denovo.m`: script for drug-side cold-start evaluation.
 * `fmultiGMF.m`: main implementation of the full multiGMF model.
 * `no_soft_fmultiGMF.m`: implementation of the no-soft ablation variant.
 * `WKNN.m`: WKNN preprocessing function.
 * `Fun_Auc3.m`: function for calculating AUC, AUPR, and Precision in the evaluation scripts.
+* `Baseline/`: contains 5 baseline methods implemented in MATLAB. Each baseline script can be run for both 10-fold cross-validation and cold-start (denovo) experiments to generate comparative metrics against multiGMF.
 
 # Datasets Description
 * `Fdataset.mat`: the Fdataset used in the manuscript.
@@ -42,7 +43,7 @@ We provide step-by-step instructions for running the multiGMF model.
 addpath('Datasets');
 ```
 
-**Step 2**: load one benchmark dataset and similarity matrices
+**Step 2**: load one benchmark dataset and similarity matrices, and prepare association matrices
 ```
 load Fdataset
 % load Cdataset
@@ -82,7 +83,33 @@ tol2 = 1*1e-4;
 
 **Step 4**: run the multi-similarity geometric matrix factorization model
 ```
-[W, H, iter] = fmultiGMF(Wrd, R, D, tau, Wrr, Wdd, r, k, MaxIter, lambda1, lambda2, lambda3, tol1, tol2);
+rankk = floor(min_mn * tau);
+
+Input.A = R;
+Input.B = D;
+Input.X = Wdr;
+Input.WInit = rand(dr, rankk);
+Input.HInit = rand(dn, rankk);
+Input.kk = k;
+Input.Wrr = Wrr;
+Input.Wdd = Wdd;
+Input.P_TMat = Wrd;
+
+Options.MaxIter = MaxIter;
+Options.lambda_soft = 1;
+Options.lambda1 = lambda1;
+Options.lambda3 = lambda3;
+Options.mu1 = 1;
+Options.mu2 = 1;
+Options.tol1 = tol1;
+Options.tol2 = tol2;
+
+Output = fmultiGMF(Input, Options);
+
+W = Output.W;
+H = Output.H;
+iter = Output.t;
+
 M_recovery = W * H';
 ```
 
@@ -93,6 +120,7 @@ M_recovery = W * H';
 * The no-soft ablation can be reproduced by calling `no_soft_fmultiGMF.m` in the 10-fold cross-validation or cold-start script.
 * Single-similarity ablation experiments can be reproduced by following the commented settings in `multiGMF_10CV.m` or `multiGMF_Denovo.m`.
 * Case-study candidate rankings are generated using `Demo_multiGMF.m` after parameter selection and model evaluation. Known associations in the benchmark matrix should be excluded from the ranked candidate list.
+* Baseline methods in `Baseline/` can be run similarly for 10CV and cold-start experiments.
 
 # A Quickstart Guide
 Users can immediately start using multiGMF by running `Demo_multiGMF.m` in MATLAB.
