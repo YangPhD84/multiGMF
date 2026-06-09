@@ -183,7 +183,7 @@ Denovo_AUC_mean = mean(RowAucValue);
 Denovo_AUC_SD   = std(RowAucValue);
 
 % AUPR建议使用带起点修正的 n_RowAuPRValue
-Denovo_AUPR_mean = mean(Row_R_m_A_AUPR_value);
+Denovo_AUPR_mean = R_m_A_AUPR_value;
 Denovo_AUPR_SD   = std(Row_R_m_A_AUPR_value);
 
 Denovo_Precision_mean = mean(RowPrecisionValue);
