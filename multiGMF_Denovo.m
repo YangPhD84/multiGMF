@@ -8,7 +8,6 @@ rng('default');
 %% 1.载入数据                                            
 % load Fdataset
 load Cdataset 
-% load Ydataset
 % load CTDdataset2023
 
 drug_ChemS=(drug_ChemS+drug_ChemS')/2;
@@ -233,8 +232,8 @@ Denovo_AUC_mean = mean(RowAucValue);
 Denovo_AUC_SD   = std(RowAucValue);
 
 % AUPR 建议使用 n_RowAuPRValue，因为它加入了起点 [0,1] 修正
-Denovo_AUPR_mean = mean(n_RowAuPRValue);
-Denovo_AUPR_SD   = std(n_RowAuPRValue);
+Denovo_AUPR_mean = R_m_A_AUPR_value;
+Denovo_AUPR_SD   = std(Row_R_m_A_AUPR_value);
 
 Denovo_Precision_mean = mean(RowPrecisionValue);
 Denovo_Precision_SD   = std(RowPrecisionValue);
