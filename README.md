@@ -22,6 +22,14 @@ Installation has been tested on a Windows platform.
 * `Fun_Auc3.m`: function for calculating AUC, AUPR, and Precision in the evaluation scripts.
 * `Baseline/`: contains 5 baseline methods implemented in MATLAB. Each baseline script can be run for both 10-fold cross-validation and cold-start (denovo) experiments to generate comparative metrics against multiGMF.
 
+# Evaluation Scripts vs Final-Prediction Demo
+
+The evaluation scripts and the final-prediction demo serve different purposes.
+
+* `multiGMF_10CV.m` is used to reproduce the repeated 10-fold cross-validation experiments reported in the manuscript. In this script, test associations are masked before WKNN preprocessing, model training, hyperparameter selection, and final evaluation.
+* `multiGMF_Denovo.m` is used to reproduce the drug-side cold-start experiments reported in the manuscript. The script name is retained for compatibility, but the experiment corresponds to the drug-side cold-start setting.
+* `Demo_multiGMF.m` is used only for final full-data matrix completion and case-study candidate ranking after model evaluation and parameter selection. It should not be used to reproduce the repeated 10-fold cross-validation or drug-side cold-start results reported in the manuscript.
+
 # Datasets Description
 * `Fdataset.mat`: the Fdataset used in the manuscript.
 * `Cdataset.mat`: the Cdataset used in the manuscript.
@@ -118,9 +126,25 @@ M_recovery = W * H';
 * Run `multiGMF_Denovo.m` to reproduce the drug-side cold-start experiments. The script name is retained for compatibility, but the experiment corresponds to the cold-start setting in the manuscript.
 * AUC, AUPR, and Precision are calculated in the evaluation scripts using `Fun_Auc3.m`.
 * The no-soft ablation can be reproduced by calling `no_soft_fmultiGMF.m` in the 10-fold cross-validation or cold-start script.
+* The no-GrLap ablation can be reproduced by setting the graph-regularization weights to zero, i.e., lambda1 = lambda2 = 0, while retaining WKNN preprocessing, multi-source similarity integration, soft coupling, and all other settings.
 * Single-similarity ablation experiments can be reproduced by following the commented settings in `multiGMF_10CV.m` or `multiGMF_Denovo.m`.
 * Case-study candidate rankings are generated using `Demo_multiGMF.m` after parameter selection and model evaluation. Known associations in the benchmark matrix should be excluded from the ranked candidate list.
 * Baseline methods in `Baseline/` can be run similarly for 10CV and cold-start experiments.
+* The full Holm-adjusted p-value tables are provided in Supplementary Tables S2-S7.
+
+# Mapping between Manuscript Tables and Scripts
+
+| Manuscript item | Dataset | Evaluation setting | Script or setting | Key parameters |
+|---|---|---|---|---|
+| Table 2 | Fdataset | Internal validation for lambda1 and tau | Parameter search within `multiGMF_10CV.m` | k = 10; tau in {0.1, 0.3, 0.5, 0.7, 0.9}; lambda1 = lambda2 in {0.1, 0.01, 0.001, 0.0001, 0.00001} |
+| Table 3 | Fdataset | Internal validation for k | Parameter search within `multiGMF_10CV.m` | tau = 0.7; lambda1 = lambda2 = 0.0001; k in {1, 5, 10, 15, 20} |
+| Table 4 | Fdataset | Repeated 10-fold CV and drug-side cold-start | `multiGMF_10CV.m`; `multiGMF_Denovo.m` | tau = 0.7; lambda1 = lambda2 = 0.0001; k = 10 |
+| Table 5 | Fdataset | Ablation and single-source sensitivity | `multiGMF_10CV.m`; `multiGMF_Denovo.m`; `no_soft_fmultiGMF.m`; single-source settings | Same fold-wise masking protocol |
+| Table 6 | Fdataset | Case-study candidate ranking | `Demo_multiGMF.m` | Final prediction after parameter selection; known associations excluded from candidate ranking |
+| Table 7 | Cdataset | Repeated 10-fold CV and drug-side cold-start | `multiGMF_10CV.m`; `multiGMF_Denovo.m` | tau = 0.7; lambda1 = lambda2 = 0.0001; k = 10 |
+| Table 8 | CTDdataset2023 | Repeated 10-fold CV and drug-side cold-start | `multiGMF_10CV.m`; `multiGMF_Denovo.m` | tau = 0.7; lambda1 = lambda2 = 0.01; k = 10 |
+| Supplementary Table S1 | All datasets | no-GrLap ablation | Set graph-regularization weights to zero while retaining WKNN, multi-source integration, and soft coupling | lambda1 = lambda2 = 0 |
+| Supplementary Tables S2-S7 | All datasets | Holm-corrected paired t-tests | Supplementary Information | Paired two-sided t-tests with Holm correction |
 
 # A Quickstart Guide
 Users can immediately start using multiGMF by running `Demo_multiGMF.m` in MATLAB.
