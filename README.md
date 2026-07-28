@@ -148,25 +148,33 @@ The principal result-file naming conventions are:
 
 # Parameter Tuning
 
-The parameter analyses reported in Tables 2 and 3 were performed on Fdataset within the training stage of the fold-wise evaluation procedure. For each outer fold, the held-out test associations were first masked and kept completely untouched during hyperparameter selection. Candidate parameter settings were evaluated using an internal validation partition constructed exclusively from the corresponding masked training associations. The same outer split and internal validation partition were retained when comparing all candidate settings. The parameter combination with the highest internal-validation `AUC + AUPR` was selected, after which the selected settings were fixed for evaluation on the held-out outer test fold. This procedure provides a transparent and reproducible way to identify a stable parameter region without using the outer test associations.
+The parameter analyses reported in Tables 2 and 3 were performed on Fdataset using one fixed, complete 10-fold cross-validation run. Specifically, the evaluation code performs 10 repetitions of 10-fold cross-validation (`Count_CV = 10` and `nCV = 10`), and the first complete 10-fold cross-validation run (`num = 1`) was used for parameter selection.
+
+For every candidate parameter setting, the same 10-fold partition generated in this fixed run was retained. Each candidate setting was evaluated by completing all 10 folds, with one fold held out in turn and the remaining nine folds used for model fitting. In every fold, the held-out associations were masked before WKNN preprocessing and model training. The parameter-selection criterion was the run-level `AUC + AUPR` obtained after completing all 10 folds, corresponding to `A_AUC_values(1) + m_A_AUPR_values(1)` in `multiGMF_10CV.m`.
+
+The fold assignments, random seed, association masking procedure, WKNN preprocessing procedure, and evaluation order were kept identical across all candidate parameter settings. Therefore, the parameter analyses were based on one complete 10-fold cross-validation run rather than on the result of a single fold or the average of all 10 repeated runs. The selected parameter settings were subsequently fixed for the reported repeated 10-fold cross-validation and drug-side cold-start evaluations.
 
 For Table 2:
 
-* `k` was fixed at 10.
-* `lambda1 = lambda2` was selected from `{0.1, 0.01, 0.001, 0.0001, 0.00001}`.
-* `tau` was selected from `{0.1, 0.3, 0.5, 0.7, 0.9}`.
-* Each parameter combination was evaluated on the same internal validation partition constructed exclusively from the masked outer-fold training data.
-* The held-out outer test fold was not used to calculate the parameter-selection criterion.
-* The parameter combination was selected according to its internal-validation `AUC + AUPR` value.
-* The selected values were `lambda1 = lambda2 = 0.0001` and `tau = 0.7`.
+- The first complete 10-fold cross-validation run (`num = 1`) on Fdataset was used for parameter selection.
+- `k` was fixed at `10`.
+- `lambda1 = lambda2` was selected from `{0.1, 0.01, 0.001, 0.0001, 0.00001}`.
+- `tau` was selected from `{0.1, 0.3, 0.5, 0.7, 0.9}`.
+- Every candidate combination was evaluated by completing all 10 folds of the same fixed 10-fold partition.
+- The same fold assignments, random seed, test-association masking procedure, and WKNN preprocessing procedure were retained across all candidate combinations.
+- In each fold, the held-out associations were masked before WKNN preprocessing and model fitting.
+- The parameter-selection criterion was the run-level `AUC + AUPR`, calculated as `A_AUC_values(1) + m_A_AUPR_values(1)` after all 10 folds had been completed.
+- The selected values were `lambda1 = lambda2 = 0.0001` and `tau = 0.7`.
 
 For Table 3:
 
-* `lambda1 = lambda2 = 0.0001` and `tau = 0.7` were fixed.
-* `k` was selected from `{1, 5, 10, 15, 20}`.
-* Each candidate value of `k` was evaluated using the same internal validation partition and the same masked training associations.
-* The held-out outer test fold was not used during the selection of `k`.
-* The selected value was `k = 10`, which achieved the highest internal-validation `AUC + AUPR`.
+- The same fixed, complete 10-fold cross-validation run (`num = 1`) used for Table 2 was retained.
+- `lambda1 = lambda2 = 0.0001` and `tau = 0.7` were fixed.
+- `k` was selected from `{1, 5, 10, 15, 20}`.
+- Every candidate value of `k` was evaluated by completing all 10 folds of the same fixed 10-fold partition.
+- The fold assignments, random seed, masked associations, WKNN preprocessing procedure, and evaluation order were identical across all candidate values.
+- The parameter-selection criterion was the run-level `AUC + AUPR`, calculated as `A_AUC_values(1) + m_A_AUPR_values(1)` after all 10 folds had been completed.
+- The selected value was `k = 10`, which achieved the highest run-level `AUC + AUPR`.
 
 The outer split, internal validation partition, random seed, and masked training associations must remain unchanged across all candidate settings. Internal validation associations must be masked before WKNN preprocessing and model fitting, and the held-out outer test associations must never be used for parameter selection.
 
@@ -223,8 +231,8 @@ Activate only one dataset block at a time in each T-test script.
 
 | Manuscript item | Dataset | Evaluation setting | Script or setting | Key parameters | Primary output |
 |---|---|---|---|---|---|
-| Table 2 | Fdataset | Internal-validation analysis of `lambda1 = lambda2` and `tau` within the fold-wise training procedure | Internal validation within the training stage; parameter settings in `multiGMF_10CV.m` | `k = 10`; `tau` in `{0.1, 0.3, 0.5, 0.7, 0.9}`; `lambda1 = lambda2` in `{0.1, 0.01, 0.001, 0.0001, 0.00001}` | Internal-validation `AUC + AUPR` for every parameter combination |
-| Table 3 | Fdataset | Internal-validation analysis of the WKNN neighborhood size `k` within the fold-wise training procedure | Internal validation within the training stage; parameter settings in `multiGMF_10CV.m` | `tau = 0.7`; `lambda1 = lambda2 = 0.0001`; `k` in `{1, 5, 10, 15, 20}` | Internal-validation `AUC + AUPR` for every candidate value of `k` |
+| Table 2 | Fdataset | Parameter analysis using one fixed, complete 10-fold cross-validation run | First complete 10-fold CV run (`num = 1`) in `multiGMF_10CV.m` | `k = 10`; `tau` in `{0.1, 0.3, 0.5, 0.7, 0.9}`; `lambda1 = lambda2` in `{0.1, 0.01, 0.001, 0.0001, 0.00001}` | Run-level `AUC + AUPR` after completing all 10 folds |
+| Table 3 | Fdataset | WKNN neighborhood-size analysis using the same fixed, complete 10-fold cross-validation run as Table 2 | First complete 10-fold CV run (`num = 1`) in `multiGMF_10CV.m` | `tau = 0.7`; `lambda1 = lambda2 = 0.0001`; `k` in `{1, 5, 10, 15, 20}` | Run-level `AUC + AUPR` after completing all 10 folds |
 | Table 4 | Fdataset | Repeated 10-fold CV and drug-side cold-start | `multiGMF_10CV.m`; `multiGMF_Denovo.m`; corresponding baseline scripts | tau = 0.7; lambda1 = lambda2 = 0.0001; k = 10 | Fdataset multiGMF and baseline 10CV/cold-start MAT files |
 | Table 5 | Fdataset | Ablation and single-source sensitivity | `multiGMF_10CV.m`; `multiGMF_Denovo.m`; `no_soft_fmultiGMF.m`; single-source and no-WKNN settings | Same fold-wise masking protocol and selected Fdataset parameters | AUC, AUPR, and Precision for each model variant |
 | Table 6 | Fdataset | Case-study candidate ranking | `Demo_multiGMF.m` | Final prediction after parameter selection; known associations excluded from candidate ranking | `M_recovery` and the ranked unknown drug-disease pairs |
@@ -240,18 +248,17 @@ Activate only one dataset block at a time in each T-test script.
 
 # Reproducibility Notes
 
-* Start MATLAB from a clean session and run the scripts from the repository root or the directory specified above.
-* Activate only one dataset-loading or dataset-selection block at a time.
-* Keep the full `fmultiGMF.m` call as the default configuration in both evaluation scripts.
-* For every outer fold, mask all held-out test associations before WKNN preprocessing and model fitting.
-* Construct the internal validation partition exclusively from the masked training associations of the corresponding outer fold.
-* Mask the internal validation associations before WKNN preprocessing and model fitting during parameter tuning.
-* Keep the outer split, internal validation partition, and random seed identical across all candidate parameter settings.
-* Never use the held-out outer test associations to select hyperparameters or calculate the parameter-selection criterion.
-* Use identical repeated splits or an identical held-out target-drug order across all compared methods.
-* Use distinct MAT filenames for different datasets, methods, evaluation settings, and ablation variants.
-* Regenerate the relevant CSV files whenever a source MAT result file is changed.
-* Generate the CSV display values directly from the verified MAT result files rather than from manually entered manuscript values.
+- The evaluation code performs 10 repetitions of 10-fold cross-validation, with `Count_CV = 10` and `nCV = 10`.
+- The parameter analyses reported in Tables 2 and 3 use the first complete 10-fold cross-validation run (`num = 1`) on Fdataset.
+- Parameter selection is based on the complete result obtained after all 10 folds of this fixed run have been evaluated, rather than on the result of a single fold.
+- Keep the 10-fold partition, fold assignments, random seed, association masking procedure, WKNN preprocessing procedure, and evaluation order identical across all candidate parameter settings.
+- For every fold, mask the held-out associations before WKNN preprocessing and model fitting.
+- Calculate the parameter-selection criterion using the run-level `AUC + AUPR`, corresponding to `A_AUC_values(1) + m_A_AUPR_values(1)`.
+- After parameter selection, keep the selected settings fixed for the reported repeated 10-fold cross-validation and drug-side cold-start evaluations.
+- Use identical repeated splits or an identical held-out target-drug order across all compared methods.
+- Use distinct MAT filenames for different datasets, methods, evaluation settings, and ablation variants.
+- Regenerate the relevant CSV files whenever a source MAT result file is changed.
+- Generate the CSV display values directly from the verified MAT result files rather than from manually entered manuscript values.
 
 # A Quickstart Guide
 Users can immediately start using multiGMF by running `Demo_multiGMF.m` in MATLAB.
