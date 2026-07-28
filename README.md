@@ -220,8 +220,8 @@ Activate only one dataset block at a time in each T-test script.
 
 | Manuscript item | Dataset | Evaluation setting | Script or setting | Key parameters | Primary output |
 |---|---|---|---|---|---|
-| Table 2 | Fdataset | Single fixed-fold parameter analysis for lambda1 and tau | Parameter settings in `multiGMF_10CV.m` following the parameter-tuning protocol above | k = 10; tau in {0.1, 0.3, 0.5, 0.7, 0.9}; lambda1 = lambda2 in {0.1, 0.01, 0.001, 0.0001, 0.00001} | Fixed-fold AUC+AUPR for every parameter combination |
-| Table 3 | Fdataset | Single fixed-fold parameter analysis for k | Parameter settings in `multiGMF_10CV.m` following the parameter-tuning protocol above | tau = 0.7; lambda1 = lambda2 = 0.0001; k in {1, 5, 10, 15, 20} | Fixed-fold AUC+AUPR for every k value |
+| Table 2 | Fdataset | Internal-validation analysis of `lambda1 = lambda2` and `tau` within the fold-wise training procedure | Internal validation within the training stage; parameter settings in `multiGMF_10CV.m` | `k = 10`; `tau` in `{0.1, 0.3, 0.5, 0.7, 0.9}`; `lambda1 = lambda2` in `{0.1, 0.01, 0.001, 0.0001, 0.00001}` | Internal-validation `AUC + AUPR` for every parameter combination |
+| Table 3 | Fdataset | Internal-validation analysis of the WKNN neighborhood size `k` within the fold-wise training procedure | Internal validation within the training stage; parameter settings in `multiGMF_10CV.m` | `tau = 0.7`; `lambda1 = lambda2 = 0.0001`; `k` in `{1, 5, 10, 15, 20}` | Internal-validation `AUC + AUPR` for every candidate value of `k` |
 | Table 4 | Fdataset | Repeated 10-fold CV and drug-side cold-start | `multiGMF_10CV.m`; `multiGMF_Denovo.m`; corresponding baseline scripts | tau = 0.7; lambda1 = lambda2 = 0.0001; k = 10 | Fdataset multiGMF and baseline 10CV/cold-start MAT files |
 | Table 5 | Fdataset | Ablation and single-source sensitivity | `multiGMF_10CV.m`; `multiGMF_Denovo.m`; `no_soft_fmultiGMF.m`; single-source and no-WKNN settings | Same fold-wise masking protocol and selected Fdataset parameters | AUC, AUPR, and Precision for each model variant |
 | Table 6 | Fdataset | Case-study candidate ranking | `Demo_multiGMF.m` | Final prediction after parameter selection; known associations excluded from candidate ranking | `M_recovery` and the ranked unknown drug-disease pairs |
@@ -236,15 +236,19 @@ Activate only one dataset block at a time in each T-test script.
 | Supplementary Table S7 | CTDdataset2023 | Drug-side cold-start paired tests | `t-test/Denovo/Ttest_Denovo.m` | Two-sided paired t-test; Holm correction; alpha = 0.05 | `CTDdataset2023_Denovo_best_method_paired_ttest_holm_detail.csv` and star-summary CSV |
 
 # Reproducibility Notes
-* Start MATLAB from a clean session and run scripts from the repository root or the directory specified above.
+
+* Start MATLAB from a clean session and run the scripts from the repository root or the directory specified above.
 * Activate only one dataset-loading or dataset-selection block at a time.
-* Keep the full `fmultiGMF.m` call as the default in both evaluation scripts.
-* Mask all test associations before WKNN preprocessing and model fitting.
-* Use the same designated parameter-tuning fold and random seed for every candidate parameter setting.
-* Use identical repeated splits or identical held-out target-drug order across all compared methods.
+* Keep the full `fmultiGMF.m` call as the default configuration in both evaluation scripts.
+* For every outer fold, mask all held-out test associations before WKNN preprocessing and model fitting.
+* Construct the internal validation partition exclusively from the masked training associations of the corresponding outer fold.
+* Mask the internal validation associations before WKNN preprocessing and model fitting during parameter tuning.
+* Keep the outer split, internal validation partition, and random seed identical across all candidate parameter settings.
+* Never use the held-out outer test associations to select hyperparameters or calculate the parameter-selection criterion.
+* Use identical repeated splits or an identical held-out target-drug order across all compared methods.
 * Use distinct MAT filenames for different datasets, methods, evaluation settings, and ablation variants.
-* Regenerate the relevant CSV files whenever a source MAT file is changed.
-* After the final MAT scalar fields have been confirmed, generate the CSV display values directly from those MAT files rather than from manually entered table values.
+* Regenerate the relevant CSV files whenever a source MAT result file is changed.
+* Generate the CSV display values directly from the verified MAT result files rather than from manually entered manuscript values.
 
 # A Quickstart Guide
 Users can immediately start using multiGMF by running `Demo_multiGMF.m` in MATLAB.
