@@ -250,7 +250,7 @@ Activate only one dataset block at a time in each T-test script.
 - Parameter selection is based on the complete result obtained after all 10 folds of this fixed run have been evaluated, rather than on the result of a single fold.
 - Keep the 10-fold partition, fold assignments, random seed, association masking procedure, WKNN preprocessing procedure, and evaluation order identical across all candidate parameter settings.
 - For every fold, mask the held-out associations before WKNN preprocessing and model fitting.
-- Calculate the parameter-selection criterion using the run-level `AUC + AUPR`, corresponding to `A_AUC_values(1) + m_A_AUPR_values(1)`.
+- Compare candidate settings using the run-level `AUC + AUPR`, corresponding to `A_AUC_values(1) + m_A_AUPR_values(1)`, together with consideration of latent-dimensional complexity.
 - After parameter selection, keep the selected settings fixed for the reported repeated 10-fold cross-validation and drug-side cold-start evaluations.
 - Use identical repeated splits or an identical held-out target-drug order across all compared methods.
 - Use distinct MAT filenames for different datasets, methods, evaluation settings, and ablation variants.
