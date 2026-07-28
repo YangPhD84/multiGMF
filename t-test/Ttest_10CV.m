@@ -213,7 +213,7 @@ for k = 1:numel(metric_names)
             error('Unknown correction method: %s', correction_method);
     end
 
-    % 显著性的方向必须是最优方法均值更高
+    %
     sig_each = (adj_p < alpha) & (mean_diff > 0);
 
     if isempty(sig_each)
