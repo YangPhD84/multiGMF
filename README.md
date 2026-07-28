@@ -2,7 +2,10 @@
 To enable better integration of various drug and disease similarity data for mining potential drug-disease associations, we propose a new approach based on multi-similarity geometric matrix factorization (multiGMF). It does not simply concatenate and fuse multiple similarities but instead incorporates each similarity into a mathematical model for optimization. First, we use the weighted k-nearest neighbors (WKNN) technique to increase the density of the drug-disease association matrix. Subsequently, we apply matrix factorization to decompose the updated association matrix into latent feature matrices for drugs and diseases. Soft regularization and graph regularization are then used to integrate multiple similarity matrices. Finally, unknown drug-disease associations can be inferred by multiplying the learned drug and disease feature matrices.
 
 # Requirements
-* Matlab >= R2017b 
+
+- MATLAB R2017b or later.
+- Statistics and Machine Learning Toolbox, required by `Ttest_10CV.m` and `Ttest_Denovo.m` for the paired `ttest` function.
+- The released implementation was tested on [operating system] using MATLAB [exact release].
 
 # Installation
 multiGMF can be downloaded by
