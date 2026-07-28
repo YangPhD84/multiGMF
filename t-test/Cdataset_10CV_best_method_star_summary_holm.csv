@@ -1,0 +1,4 @@
+Dataset,Test,Metric,BestMethod,BestMean,BestSD,AddStar,TableString
+Cdataset,10CV,AUC,multiGMF,0.960776051456313,0.00132833784978389,1,$\mathbf{0.961}^{*}$ (0.001)
+Cdataset,10CV,AUPR,multiGMF,0.453923661451987,0.0076150343940605,1,$\mathbf{0.454}^{*}$ (0.008)
+Cdataset,10CV,Precision,multiGMF,0.482906538856556,0.00905010623315815,1,$\mathbf{0.483}^{*}$ (0.009)
