@@ -293,9 +293,13 @@ DenovoStats.R_m_A_AUPR_mean_SD_text = R_m_A_AUPR_mean_SD_text;
 
 parameters.lambda_soft = lambda_soft;
 parameters.lambda1 = lambda1;
+parameters.lambda2 = lambda2;
 parameters.lambda3 = lambda3;
 parameters.tau = tau;
 parameters.KNN_K = KNN_K;
+parameters.WKNN_r = 0.9;
+parameters.mu1 = Options.mu1;
+parameters.mu2 = Options.mu2;
 parameters.tol1 = tol1;
 parameters.tol2 = tol2;
 parameters.MaxIter = Options.MaxIter;
