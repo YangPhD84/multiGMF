@@ -1,4 +1,0 @@
-Dataset,Test,Metric,BestMethod,BestMean,BestSD,AddStar,TableString
-Cdataset,Denovo,AUC,multiGMF,0.899,0.191,0,$\mathbf{0.899}$ (0.191)
-Cdataset,Denovo,AUPR,MSBMF,0.298,0.458,0,$\mathbf{0.298}$ (0.458)
-Cdataset,Denovo,Precision,MSBMF,0.367,0.483,0,$\mathbf{0.367}$ (0.483)
