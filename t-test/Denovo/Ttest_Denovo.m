@@ -219,7 +219,7 @@ for k = 1:numel(metric_names)
             error('Unknown correction method: %s', correction_method);
     end
 
-    % 显著性的方向必须是最优方法均值更高
+    % 
     sig_each = (adj_p < alpha) & (mean_diff > 0);
 
     valid_sig = ~isnan(adj_p);
@@ -332,7 +332,7 @@ function [vec, report_mean, report_sd, source_msg] = extract_denovo_metric(S, me
             source_msg = 'main=Result_AUC_value; vector=RowAucValue';
 
         case 'aupr'
-            % 用户指定：Denovo AUPR 主值使用 R_m_A_AUPR_value
+            %
             report_mean = get_required_scalar(S, {'R_m_A_AUPR_value'}, ...
                 method_name, 'AUPR report mean');
             vec = get_first_vector(S, {'n_RowAuPRValue', 'n_rowAuPRValue', ...
