@@ -29,7 +29,7 @@ Installation has been tested on a Windows platform.
 
 The evaluation scripts and the final-prediction demo serve different purposes.
 
-* `multiGMF_10CV.m` is used to reproduce the repeated 10-fold cross-validation experiments reported in the manuscript. In this script, test associations are masked before WKNN preprocessing, model training, and final evaluation. Parameter tuning was performed separately using the fixed fold described in the Parameter Tuning section.
+* `multiGMF_10CV.m` is used to reproduce the repeated 10-fold cross-validation experiments reported in the manuscript. In this script, test associations are masked before WKNN preprocessing, model training, and final evaluation.
 * `multiGMF_Denovo.m` is used to reproduce the drug-side cold-start experiments reported in the manuscript. The script name is retained for compatibility, but the experiment corresponds to the drug-side cold-start setting. The full `fmultiGMF.m` model is used as the default configuration.
 * `Demo_multiGMF.m` is used only for final full-data matrix completion after model evaluation and parameter selection. It should not be used to reproduce the repeated 10-fold cross-validation or drug-side cold-start results reported in the manuscript.
 
