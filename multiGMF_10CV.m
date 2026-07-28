@@ -353,8 +353,18 @@ MetricStats.Precision_fold_mean_SD_text = sprintf('%.4f ± %.4f', Precision_fold
 
 time_all = toc(t_all);
 
-parameters.lambda_soft=lambda_soft;
-parameters.lambda1=lambda1;
+parameters.lambda_soft = lambda_soft;
+parameters.lambda1 = lambda1;
+parameters.lambda2 = lambda2;
+parameters.lambda3 = lambda3;
+parameters.tau = tau;
+parameters.KNN_K = KNN_K;
+parameters.WKNN_r = 0.9;
+parameters.mu1 = Options.mu1;
+parameters.mu2 = Options.mu2;
+parameters.tol1 = Options.tol1;
+parameters.tol2 = Options.tol2;
+parameters.MaxIter = Options.MaxIter;
 fprintf('AUC=%4.4f,AUPR=%4.4f,Precision=%4.4f.\n',Result_AUC_value,R_m_A_AUPR_value,Result_Precision_value)
 %%    
 tol1 = Options.tol1;
