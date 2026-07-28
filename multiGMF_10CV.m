@@ -142,7 +142,7 @@ Options.tol2 = 1*1e-4;
 % Options.tol1 = 2*1e-3;
 % Options.tol2 = 1*1e-4;
 
-%% CTDdataset2023   knn = 10 tau = 0.7 lambda_soft= 1 lambda1= 0.0001 lambda3= 1 Options.MaxIter=300 Options.tol1 = 2*1e-3; Options.tol2 = 1*1e-4;
+%% CTDdataset2023   knn = 10 tau = 0.7 lambda_soft= 1 lambda1= 0.01 lambda3= 1 Options.MaxIter=300 Options.tol1 = 2*1e-3; Options.tol2 = 1*1e-4;
 % lambda_soft = 1;
 % lambda1 = 0.01;
 % lambda2 = lambda1;
