@@ -5,7 +5,6 @@ To enable better integration of various drug and disease similarity data for min
 
 - MATLAB R2017b or later.
 - Statistics and Machine Learning Toolbox, required by `Ttest_10CV.m` and `Ttest_Denovo.m` for the paired `ttest` function.
-- The released implementation was tested on [operating system] using MATLAB [exact release].
 
 # Installation
 multiGMF can be downloaded by
@@ -175,8 +174,6 @@ For Table 3:
 - The fold assignments, random seed, masked associations, WKNN preprocessing procedure, and evaluation order were identical across all candidate values.
 - The parameter-selection criterion was the run-level `AUC + AUPR`, calculated as `A_AUC_values(1) + m_A_AUPR_values(1)` after all 10 folds had been completed.
 - The selected value was `k = 10`, which achieved the highest run-level `AUC + AUPR`.
-
-The outer split, internal validation partition, random seed, and masked training associations must remain unchanged across all candidate settings. Internal validation associations must be masked before WKNN preprocessing and model fitting, and the held-out outer test associations must never be used for parameter selection.
 
 The final settings used in the reported evaluations are:
 
