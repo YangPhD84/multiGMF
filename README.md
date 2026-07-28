@@ -145,24 +145,27 @@ The principal result-file naming conventions are:
 
 # Parameter Tuning
 
-The parameter analyses reported in Tables 2 and 3 were performed on Fdataset using the result from one fixed fold as the parameter-tuning reference. The same designated fold was used to compare all candidate parameter settings, and results from the other folds were not used to select the parameters. After parameter selection, the selected settings were fixed for the subsequent evaluations.
+The parameter analyses reported in Tables 2 and 3 were performed on Fdataset within the training stage of the fold-wise evaluation procedure. For each outer fold, the held-out test associations were first masked and kept completely untouched during hyperparameter selection. Candidate parameter settings were evaluated using an internal validation partition constructed exclusively from the corresponding masked training associations. The same outer split and internal validation partition were retained when comparing all candidate settings. The parameter combination with the highest internal-validation `AUC + AUPR` was selected, after which the selected settings were fixed for evaluation on the held-out outer test fold. This procedure provides a transparent and reproducible way to identify a stable parameter region without using the outer test associations.
 
 For Table 2:
 
 * `k` was fixed at 10.
 * `lambda1 = lambda2` was selected from `{0.1, 0.01, 0.001, 0.0001, 0.00001}`.
 * `tau` was selected from `{0.1, 0.3, 0.5, 0.7, 0.9}`.
-* Each parameter combination was evaluated using the same designated parameter-tuning fold.
-* The parameter combination was selected according to the `AUC + AUPR` value obtained on this fold.
+* Each parameter combination was evaluated on the same internal validation partition constructed exclusively from the masked outer-fold training data.
+* The held-out outer test fold was not used to calculate the parameter-selection criterion.
+* The parameter combination was selected according to its internal-validation `AUC + AUPR` value.
 * The selected values were `lambda1 = lambda2 = 0.0001` and `tau = 0.7`.
 
 For Table 3:
 
 * `lambda1 = lambda2 = 0.0001` and `tau = 0.7` were fixed.
 * `k` was selected from `{1, 5, 10, 15, 20}`.
-* The selected value was `k = 10`.
+* Each candidate value of `k` was evaluated using the same internal validation partition and the same masked training associations.
+* The held-out outer test fold was not used during the selection of `k`.
+* The selected value was `k = 10`, which achieved the highest internal-validation `AUC + AUPR`.
 
-The released `multiGMF_10CV.m` contains the parameter block and the selected settings used for the final evaluation. To reproduce Tables 2 and 3 without changing the multiGMF optimization logic, set one candidate combination at a time, run it using the same fixed parameter-tuning fold, and record the corresponding `AUC + AUPR`. The fold assignment, random seed, training associations, and held-out associations must remain unchanged across all candidate settings.
+The outer split, internal validation partition, random seed, and masked training associations must remain unchanged across all candidate settings. Internal validation associations must be masked before WKNN preprocessing and model fitting, and the held-out outer test associations must never be used for parameter selection.
 
 The final settings used in the reported evaluations are:
 
