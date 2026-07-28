@@ -149,7 +149,7 @@ The principal result-file naming conventions are:
 
 The parameter analyses reported in Tables 2 and 3 were performed on Fdataset using one fixed, complete 10-fold cross-validation run. Specifically, the evaluation code performs 10 repetitions of 10-fold cross-validation (`Count_CV = 10` and `nCV = 10`), and the first complete 10-fold cross-validation run (`num = 1`) was used for parameter selection.
 
-For every candidate parameter setting, the same 10-fold partition generated in this fixed run was retained. Each candidate setting was evaluated by completing all 10 folds, with one fold held out in turn and the remaining nine folds used for model fitting. In every fold, the held-out associations were masked before WKNN preprocessing and model training. The parameter-selection criterion was the run-level `AUC + AUPR` obtained after completing all 10 folds, corresponding to `A_AUC_values(1) + m_A_AUPR_values(1)` in `multiGMF_10CV.m`.
+For every candidate parameter setting, the same 10-fold partition generated in this fixed run was retained. Each candidate setting was evaluated by completing all 10 folds, with one fold held out in turn and the remaining nine folds used for model fitting. In every fold, the held-out associations were masked before WKNN preprocessing and model training. The run-level `AUC + AUPR` obtained after completing all 10 folds, corresponding to `A_AUC_values(1) + m_A_AUPR_values(1)` in `multiGMF_10CV.m`, was used to compare candidate settings together with consideration of latent-dimensional complexity.
 
 The fold assignments, random seed, association masking procedure, WKNN preprocessing procedure, and evaluation order were kept identical across all candidate parameter settings. Therefore, the parameter analyses were based on one complete 10-fold cross-validation run rather than on the result of a single fold or the average of all 10 repeated runs. The selected parameter settings were subsequently fixed for the reported repeated 10-fold cross-validation and drug-side cold-start evaluations.
 
@@ -162,7 +162,7 @@ For Table 2:
 - Every candidate combination was evaluated by completing all 10 folds of the same fixed 10-fold partition.
 - The same fold assignments, random seed, test-association masking procedure, and WKNN preprocessing procedure were retained across all candidate combinations.
 - In each fold, the held-out associations were masked before WKNN preprocessing and model fitting.
-- The parameter-selection criterion was the run-level `AUC + AUPR`, calculated as `A_AUC_values(1) + m_A_AUPR_values(1)` after all 10 folds had been completed.
+- The run-level `AUC + AUPR`, calculated as `A_AUC_values(1) + m_A_AUPR_values(1)` after all 10 folds had been completed, was used to compare candidate settings together with consideration of latent-dimensional complexity.
 - The selected values were `lambda1 = lambda2 = 0.0001` and `tau = 0.7`.
 
 For Table 3:
