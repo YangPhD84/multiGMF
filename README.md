@@ -132,7 +132,7 @@ M_recovery = W * H';
 
 # Reproducing Experiments
 * Run `multiGMF_10CV.m` to reproduce the repeated 10-fold cross-validation experiments.
-* Run `multiGMF_Denovo.m` to reproduce the drug-side cold-start experiments. The script name is retained for compatibility, but the experiment corresponds to the cold-start setting in the manuscript.
+* Run `multiGMF_Denovo.m` to reproduce the drug-side cold-start experiments. The script name is retained for compatibility, but the experiment corresponds to the cold-start setting in the manuscript. In the drug-side cold-start evaluation, `multiGMF_Denovo.m` uses the chemical-structure, ATC-code, and target-profile drug similarities, i.e., \(R^{(1)}\), \(R^{(2)}\), and \(R^{(5)}\), together with both disease similarities. The side-effect and drug–drug-interaction similarities, \(R^{(3)}\) and \(R^{(4)}\), are intentionally excluded because reliable information from these sources may be unavailable for new drugs. The term “full model” refers to the complete `fmultiGMF.m` objective with WKNN preprocessing, graph regularization, and soft coupling, rather than the no-soft ablation.
 * AUC, AUPR, and Precision are calculated in the evaluation scripts using `Fun_Auc3.m`.
 * The no-soft ablation can be reproduced by calling `no_soft_fmultiGMF.m` in the 10-fold cross-validation or cold-start script.
 * The no-GrLap ablation can be reproduced by setting the graph-regularization weights to zero, i.e., `lambda1 = lambda2 = 0`, while retaining WKNN preprocessing, multi-source similarity integration, soft coupling, and all other settings.
