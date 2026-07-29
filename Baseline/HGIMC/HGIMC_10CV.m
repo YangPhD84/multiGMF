@@ -2,7 +2,7 @@
 % 注意：1.rng('default')和rand('state', num); %#ok<RAND>
 %       2.保存名称
 clear
-addpath('Functions');
+% addpath('Functions');
 % addpath 'code'
 % addpath('VDdataset');
 addpath('code');
