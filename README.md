@@ -63,6 +63,14 @@ load Fdataset
 % load Cdataset
 % load CTDdataset2023
 
+drug_ChemS = (drug_ChemS + drug_ChemS') / 2;
+drug_AtcS = (drug_AtcS + drug_AtcS') / 2;
+drug_SideS = (drug_SideS + drug_SideS') / 2;
+drug_DDIS = (drug_DDIS + drug_DDIS') / 2;
+drug_TargetS = (drug_TargetS + drug_TargetS') / 2;
+disease_PhS = (disease_PhS + disease_PhS') / 2;
+disease_DoS = (disease_DoS + disease_DoS') / 2;
+
 Wrr1 = drug_ChemS;
 Wrr2 = drug_AtcS;
 Wrr3 = drug_SideS;
