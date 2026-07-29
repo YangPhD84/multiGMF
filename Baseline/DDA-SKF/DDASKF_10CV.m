@@ -7,8 +7,8 @@ rng('default');
 
 %% 1.载入数据                                            
 
-% load Fdataset;
-load Cdataset;
+load Fdataset;
+% load Cdataset;
 % load CTDdataset2023
 
 drug_ChemS=(drug_ChemS+drug_ChemS')/2;
