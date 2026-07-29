@@ -145,6 +145,12 @@ The principal result-file naming conventions are:
 * Baseline 10CV: `<dataset>_STresult_<method>_10CV_fold_results.mat`.
 * multiGMF and baseline cold-start: `<dataset>_STresult_<method>_Denovoone.mat`.
 
+## Regenerating MAT and CSV Outputs
+
+All top-level evaluation scripts use Fdataset as the default active dataset. Run `Demo_multiGMF.m`, `multiGMF_10CV.m`, and `multiGMF_Denovo.m` from the repository root. Run each baseline evaluation script from its corresponding method directory under `Baseline/`, because the baseline scripts use method-specific relative paths.
+
+The evaluation scripts save their MAT result files in the current working directory. To regenerate the statistical-analysis outputs, copy the repeated 10-fold cross-validation MAT files to `t-test/` and the drug-side cold-start MAT files to `t-test/Denovo/`, retaining the documented filenames. Then run `Ttest_10CV.m` and `Ttest_Denovo.m`, respectively.
+
 # Parameter Tuning
 
 The parameter analyses reported in Tables 2 and 3 were performed on Fdataset using one fixed, complete 10-fold cross-validation run. Specifically, the evaluation code performs 10 repetitions of 10-fold cross-validation (`Count_CV = 10` and `nCV = 10`), and the first complete 10-fold cross-validation run (`num = 1`) was used for parameter selection.
