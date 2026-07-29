@@ -6,9 +6,9 @@ clear
 % addpath('Luohm data');
 addpath('code');
 %% 1.Load Datesets       
-% load Fdataset;
+load Fdataset;
 % load Cdataset;
-load CTDdataset2023
+% load CTDdataset2023
 
 sigma=0.5;
 Wrr=(drug_ChemS+drug_AtcS+drug_TargetS)/3;
