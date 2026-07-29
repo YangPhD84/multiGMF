@@ -6,10 +6,10 @@ clear
 addpath('code');
 rng('default');
 %% 1.载入数据                                            
-% load Fdataset;
+load Fdataset;
 
 % load CTDdataset2023
-load Cdataset;
+% load Cdataset;
 
 
 drug_ChemS=(drug_ChemS+drug_ChemS')/2;
