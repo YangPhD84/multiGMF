@@ -5,6 +5,7 @@ To enable better integration of various drug and disease similarity data for min
 
 - MATLAB R2017b or later.
 - Statistics and Machine Learning Toolbox, required by `Ttest_10CV.m` and `Ttest_Denovo.m` for the paired `ttest` function.
+- A Java Runtime Environment and ClusterONE 1.0 are required only for the MBiRW baseline. The JAR file must be available as `Baseline/MBiRW/cluster_one-1.0.jar`.
 
 # Installation
 multiGMF can be downloaded by
