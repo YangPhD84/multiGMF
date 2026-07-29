@@ -5,6 +5,8 @@
 clear
 % addpath('Luohm data');
 addpath('code');
+rng('default');
+
 %% 1.Load Datesets       
 load Fdataset
 % load Cdataset
