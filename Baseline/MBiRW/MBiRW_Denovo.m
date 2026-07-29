@@ -4,6 +4,7 @@
 %        3.save 名称（方法_方案_数据）
 clear
 addpath('code');
+rng('default');
 
 %% Configure the Java executable used by ClusterONE
 java_home = char(java.lang.System.getProperty('java.home'));
