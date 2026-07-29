@@ -4,6 +4,22 @@
 %        3.save 名称（方法_方案_数据）
 clear
 addpath('code');
+
+%% Configure the Java executable used by ClusterONE
+java_home = char(java.lang.System.getProperty('java.home'));
+java_bin = fullfile(java_home, 'bin');
+java_exe = fullfile(java_bin, 'java.exe');
+
+if exist(java_exe, 'file') ~= 2
+    error('Java executable was not found: %s', java_exe);
+end
+
+setenv('PATH', [java_bin pathsep getenv('PATH')]);
+
+if exist('cluster_one-1.0.jar', 'file') ~= 2
+    error(['cluster_one-1.0.jar was not found. ', ...
+        'Run this script from the Baseline/MBiRW directory.']);
+end
 %% 1.Load Datesets                                            
 
 load Fdataset;
