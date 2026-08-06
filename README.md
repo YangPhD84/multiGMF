@@ -206,7 +206,7 @@ For each dataset, evaluation setting, and metric, the method with the highest re
 
 * For repeated 10-fold cross-validation, pairing is based on the same repeated data split across methods. `Ttest_10CV.m` reads `A_AUC_values`, `m_A_AUPR_values`, and `Precision_values` from each MAT result file.
 * For drug-side cold-start evaluation, pairing is based on the same held-out target drug across methods. `Ttest_Denovo.m` uses `RowAucValue`, `n_RowAuPRValue` (or the documented `RowAuPRValue` fallback), and `RowPrecisionValue` for the paired tests.
-* In the cold-start analysis, the reported AUC, AUPR, and Precision point estimates are read from `Result_AUC_value`, `R_m_A_AUPR_value`, and `Result_Precision_value`, respectively. The point estimates and the target-drug-level paired vectors should not be interchanged.
+* In the cold-start analysis, the reported AUC, AUPR, and Precision point estimates are read from `Result_AUC_value`, `R_m_A_AUPR_value`, and `Result_Precision_value`, respectively. The point estimates and the target-drug-level paired vectors should not be interchanged. This distinction is intentional because the aggregate point estimates are used for performance reporting and best-method identification, whereas the paired t-tests require matched target-drug-level observations across methods.
 * A comparison is marked significant only when the Holm-adjusted p-value is below 0.05 and the paired mean difference favors the method listed as the best method.
 * A star is added to the best-performing method only when it is significantly better than all five compared baseline methods after Holm correction.
 * Before running either script, all paired vectors must have equal lengths and preserve the same split or target-drug order across methods.
