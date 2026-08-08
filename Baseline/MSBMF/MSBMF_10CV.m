@@ -18,16 +18,6 @@ Wdd=[Wdd1,Wdd2];
 Wdr=didr;
 Wrd = Wdr';
 
-%%
-% addpath('VDdataset');
-% load drugsim;
-% load virussim;
-% load virusdrug;
-% 
-%  Wrr=virussim;
-%  Wdd=drugsim;
-%  Wdr=virusdrug;
-%  Wrd = Wdr';
 
 %%
 tol1=2*1e-3;%2*1e-2; %1e-5;%            %1e-2
@@ -164,18 +154,18 @@ for lambda3=0.1%[ 0.001 0.01 0.1 1]
                         FPRArray(result_len+1:dn) = FPRArray(result_len);
                         PreArray(result_len+1:dn) = PreArray(result_len);
                         
-                        A_DresultMat_TPR(k,:) = TPRArray;%193*313 one fold中每个关联排序一次
+                        A_DresultMat_TPR(k,:) = TPRArray;
                         A_DresultMat_FPR(k,:) = FPRArray;
                         A_DresultMat_Pre(k,:) = PreArray;
                     end
                     
-                    C_DresultMat_TPR(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_TPR;%1993*313 一次10CV中 累计ten folds
+                    C_DresultMat_TPR(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_TPR;
                     C_DresultMat_FPR(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_FPR;
                     C_DresultMat_Pre(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_Pre;
                     
                     ass_num = ass_num+Tfnum;
                 end
-                A_Result_TPRArray(num,:) = mean(C_DresultMat_TPR);%10*313 一次10CV中 平均ten folds
+                A_Result_TPRArray(num,:) = mean(C_DresultMat_TPR);%
                 A_Result_FPRArray(num,:) = mean(C_DresultMat_FPR);
                 A_Result_PreArray(num,:) = mean(C_DresultMat_Pre);
                 
@@ -187,7 +177,7 @@ for lambda3=0.1%[ 0.001 0.01 0.1 1]
                 runningtime_10CV(num) = toc(t_cv);
             end
             
-            Result_TPRArray =mean(A_Result_TPRArray);%VV%    十次10CV中 平均ten folds    对于只跑一次，去掉mean
+            Result_TPRArray =mean(A_Result_TPRArray);%VV%
             Result_FPRArray =mean(A_Result_FPRArray);%VV
             Result_PreArray =mean(A_Result_PreArray);%VV
             %             T_TPRArray = [0,Result_TPRArray];
@@ -201,7 +191,7 @@ for lambda3=0.1%[ 0.001 0.01 0.1 1]
             R_m_PreArray = [1,Result_PreArray];%V
             R_m_A_AUPR_value = trapz(R_m_TPRArray,R_m_PreArray);%V
             
-            %% =====  mean ± SD =====
+            %% =====  mean 卤 SD =====
             AUC_10CV_mean = mean(A_AUC_values);
             AUC_10CV_SD   = std(A_AUC_values);
             
@@ -244,15 +234,15 @@ for lambda3=0.1%[ 0.001 0.01 0.1 1]
             MetricStats.Iter_fold_SD = Iter_fold_SD;
             
             %
-            MetricStats.AUC_10CV_mean_SD_text = sprintf('%.4f ± %.4f', AUC_10CV_mean, AUC_10CV_SD);
-            MetricStats.AUPR_10CV_mean_SD_text = sprintf('%.4f ± %.4f', AUPR_10CV_mean, AUPR_10CV_SD);
-            MetricStats.Precision_10CV_mean_SD_text = sprintf('%.4f ± %.4f', Precision_10CV_mean, Precision_10CV_SD);
+            MetricStats.AUC_10CV_mean_SD_text = sprintf('%.4f 卤 %.4f', AUC_10CV_mean, AUC_10CV_SD);
+            MetricStats.AUPR_10CV_mean_SD_text = sprintf('%.4f 卤 %.4f', AUPR_10CV_mean, AUPR_10CV_SD);
+            MetricStats.Precision_10CV_mean_SD_text = sprintf('%.4f 卤 %.4f', Precision_10CV_mean, Precision_10CV_SD);
             
-            MetricStats.AUC_fold_mean_SD_text = sprintf('%.4f ± %.4f', AUC_fold_mean, AUC_fold_SD);
-            MetricStats.AUPR_fold_mean_SD_text = sprintf('%.4f ± %.4f', AUPR_fold_mean, AUPR_fold_SD);
-            MetricStats.Precision_fold_mean_SD_text = sprintf('%.4f ± %.4f', Precision_fold_mean, Precision_fold_SD);
+            MetricStats.AUC_fold_mean_SD_text = sprintf('%.4f 卤 %.4f', AUC_fold_mean, AUC_fold_SD);
+            MetricStats.AUPR_fold_mean_SD_text = sprintf('%.4f 卤 %.4f', AUPR_fold_mean, AUPR_fold_SD);
+            MetricStats.Precision_fold_mean_SD_text = sprintf('%.4f 卤 %.4f', Precision_fold_mean, Precision_fold_SD);
             
-            MetricStats.Iter_fold_mean_SD_text = sprintf('%.4f ± %.4f', Iter_fold_mean, Iter_fold_SD);
+            MetricStats.Iter_fold_mean_SD_text = sprintf('%.4f 卤 %.4f', Iter_fold_mean, Iter_fold_SD);
             
             time_all = toc(t_all);
 
@@ -270,14 +260,11 @@ parameters.tol2=tol2;
 fprintf('Curve-mean result: AUC=%4.4f, AUPR=%4.4f, Precision=%4.4f.\n', ...
     Result_AUC_value, R_m_A_AUPR_value, Result_Precision_value);
 
-fprintf('10CV-level mean ± SD: AUC=%s, AUPR=%s, Precision=%s.\n', ...
+fprintf('10CV-level mean 卤 SD: AUC=%s, AUPR=%s, Precision=%s.\n', ...
     MetricStats.AUC_10CV_mean_SD_text, ...
     MetricStats.AUPR_10CV_mean_SD_text, ...
     MetricStats.Precision_10CV_mean_SD_text);
 
-%% 4 测试结果保存和记录
-
-%根据不同数据集替换 Fdataset  Cdataset CTDdataset2023
 save Fdataset_STresult_MSBMF_10CV_fold_results.mat ...
     time_all runningtime_10CV TIME_alone MetricStats ...
     parameters AUC_alone AUPR_alone Precision_alone iter_alone ...
