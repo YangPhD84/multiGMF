@@ -1,11 +1,9 @@
 %%======================== De novo ========================%%
-% %注意：1.weight的取值
-%        2.denovo for one和de novo for all
-%        3.save 名称（方法_方案_数据）
+
 clear
 addpath('code');
 rng('default');
-%% 1.载入数据                                            
+                                          
 load Fdataset;
 
 % load CTDdataset2023
@@ -32,18 +30,7 @@ Wdr = didr;%didr
 
 Input.beta = 0.4;
 Input.lamuda = 2^(-16);
-% Input.predictSimMatdcChemical = predictSimMatdcChemical;
-% Input.predictSimMatdg = predictSimMatdg;
-% Input.predictSimMatdcGo = predictSimMatdcGo;
-% Input.predictSimMatdcDomain = predictSimMatdcDomain;
-% Wdr = predictAdMatdgc;%didr
 
-%C数据集测试
-% Input.predictSimMatdcChemical = C_Simmatdc_chemical;
-% Input.predictSimMatdg = C_Simmatdc_dg;
-% Input.predictSimMatdcGo = C_Simmatdc_Go;
-% Input.predictSimMatdcDomain = C_Simmatdc_domain;
-% Wdr = C_mat_dgc;%didr
 
 [dn,dr] = size(Wdr);
 Wrd = Wdr';
@@ -54,33 +41,33 @@ p_drugPos = find(NumAS==1);%-------------- for one -------------
 p_drugLen = size(p_drugPos,2);
 DrugResult = zeros(dn,1);
 %% complete ten-fold cross validation ten times;
-%% ===== 每个 ePos/test drug 的指标记录 =====
+
 RowAucValue = zeros(1,p_drugLen);
 RowAuPRValue = zeros(1,p_drugLen);
-RowPrecisionValue = zeros(1,p_drugLen);   % 新增：每个 ePos/test drug 的 Precision
+RowPrecisionValue = zeros(1,p_drugLen);   
 Row_R_m_A_AUPR_value = zeros(1,p_drugLen);
 
 n_RowAucValue = zeros(1,p_drugLen);
 n_RowAuPRValue = zeros(1,p_drugLen);
-n_RowPrecisionValue = zeros(1,p_drugLen); % 新增：带起点修正版本的 Precision
+n_RowPrecisionValue = zeros(1,p_drugLen); 
 
 
 A_DresultMat_TPR = zeros(p_drugLen,dn);
 A_DresultMat_FPR = zeros(p_drugLen,dn);
 A_DresultMat_Pre = zeros(p_drugLen,dn);
 
-TIME_ePos = zeros(1,p_drugLen);           % 新增：每个 ePos/test drug 的运行时间
-t_all = tic;                              % 新增：Denovo 总运行时间
+TIME_ePos = zeros(1,p_drugLen);         
+t_all = tic;                             
 for num = 1:p_drugLen
     num
-     t_epos = tic;   % 新增：记录当前 ePos/test drug 的运行时间
+     t_epos = tic;   
 
     test_r_index = p_drugPos(num);
     ePos = find(Wdr(:,test_r_index)==1);%-------------- for one -------------
     % %     ePos = find(Wdr(:,test_r_index)~=0);%-------------- for all -------------
     Tfnum = length(ePos);
     
-    Wdr(ePos,test_r_index)= 0;%行列坐标
+    Wdr(ePos,test_r_index)= 0;%
     
     P_TMat = Wdr;
     
@@ -142,22 +129,22 @@ M_ResultMat = score_matrix;
     n_FPRArray = [0,FPRArray];
     n_PrecisionArray = [1,PrecisionArray];
     
-    %% ===== 当前 ePos/test drug 的 AUC、AUPR、Precision =====
+   
 RowAucValue(num) = trapz(FPRArray,TPRArray);
 RowAuPRValue(num) = trapz(TPRArray,PrecisionArray);
 RowPrecisionValue(num) = PrecisionArray(1);
 
-% 带起点修正版本
+
 n_RowAucValue(num) = trapz(n_FPRArray,n_TPRArray);
 n_RowAuPRValue(num) = trapz(n_TPRArray,n_PrecisionArray);
 Row_R_m_A_AUPR_value(num) = n_RowAuPRValue(num);
-n_RowPrecisionValue(num) = n_PrecisionArray(2);  % 等价于 PrecisionArray(1)
+n_RowPrecisionValue(num) = n_PrecisionArray(2); 
 
 A_DresultMat_TPR(num,:) = TPRArray;
 A_DresultMat_FPR(num,:) = FPRArray;
 A_DresultMat_Pre(num,:) = PrecisionArray;
 
-TIME_ePos(num) = toc(t_epos);   % 新增：当前 ePos/test drug 的运行时间
+TIME_ePos(num) = toc(t_epos);  
 
 Wdr(ePos,test_r_index)= 1;
     
@@ -175,7 +162,6 @@ R_m_TPRArray = [0,Result_TPRArray];%V
 R_m_PreArray = [1,Result_PreArray];%V
 R_m_A_AUPR_value = trapz(R_m_TPRArray,R_m_PreArray);%V
 
-%% ===== 新增：Denovo ePos-level mean ± SD 统计 =====
 
 Denovo_AUC_mean = mean(RowAucValue);
 Denovo_AUC_SD   = std(RowAucValue);
@@ -195,6 +181,7 @@ R_m_A_AUPR_mean_from_rows = Denovo_AUPR_mean;
 
 R_m_A_AUPR_mean_SD_text = sprintf('%.4f ± %.4f', ...
     R_m_A_AUPR_value, R_m_A_AUPR_SD);
+Denovo_AUPR_mean = R_m_A_AUPR_value;
 
 DenovoStats.AUC_mean = Denovo_AUC_mean;
 DenovoStats.AUC_SD = Denovo_AUC_SD;
@@ -226,9 +213,7 @@ runningtime = toc(t_all);
 
 % save matlab
 
-%% 4 测试结果保存和记录
 
-%根据不同数据集替换 Fdataset  Cdataset CTDdataset2023
 save Fdataset_STresult_DDASKF_Denovoone.mat ...
     p_drugLen p_drugPos ...
     Result_TPRArray Result_FPRArray Result_PreArray ...
