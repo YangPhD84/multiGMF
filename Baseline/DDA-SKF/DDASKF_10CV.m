@@ -28,18 +28,6 @@ Wdr = didr;%didr
 
 Input.beta = 0.4;
 Input.lamuda = 2^(-16);
-% Input.predictSimMatdcChemical = predictSimMatdcChemical;
-% Input.predictSimMatdg = predictSimMatdg;
-% Input.predictSimMatdcGo = predictSimMatdcGo;
-% Input.predictSimMatdcDomain = predictSimMatdcDomain;
-% Wdr = predictAdMatdgc;%didr
-
-%
-% Input.predictSimMatdcChemical = C_Simmatdc_chemical;
-% Input.predictSimMatdg = C_Simmatdc_dg;
-% Input.predictSimMatdcGo = C_Simmatdc_Go;
-% Input.predictSimMatdcDomain = C_Simmatdc_domain;
-% Wdr = C_mat_dgc;%didr
 
 [dn,dr] = size(Wdr);
 Wrd = Wdr';
