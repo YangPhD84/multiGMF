@@ -1,7 +1,5 @@
 %%======================== De novo ========================%%
-% %注意：1.weight的取值
-%        2.denovo for one和de novo for all
-%        3.save 名称（方法_方案_数据）
+
 clear
 addpath('code');
 rng('default');
@@ -39,32 +37,32 @@ p_drugPos = find(NumAS==weight);%-------------- for one -------------
 % % p_drugPos = find(NumAS~=0);%-------------- for all -------------
 p_drugLen = size(p_drugPos,2);
 DrugResult = zeros(dn,1);
-%% ===== 每个 ePos/test drug 的指标记录 =====
+
 RowAucValue = zeros(1,p_drugLen);
 RowAuPRValue = zeros(1,p_drugLen);
-RowPrecisionValue = zeros(1,p_drugLen);   % 新增：每个 ePos/test drug 的 Precision
+RowPrecisionValue = zeros(1,p_drugLen);   %
 Row_R_m_A_AUPR_value = zeros(1,p_drugLen);
 
 n_RowAucValue = zeros(1,p_drugLen);
 n_RowAuPRValue = zeros(1,p_drugLen);
-n_RowPrecisionValue = zeros(1,p_drugLen); % 新增：带起点修正版本的 Precision
+n_RowPrecisionValue = zeros(1,p_drugLen); %
 
 A_DresultMat_TPR = zeros(p_drugLen,dn);
 A_DresultMat_FPR = zeros(p_drugLen,dn);
 A_DresultMat_Pre = zeros(p_drugLen,dn);
 
-TIME_ePos = zeros(1,p_drugLen);           % 新增：每个 ePos/test drug 的运行时间
-t_all = tic;                              % 新增：Denovo 总运行时间
+TIME_ePos = zeros(1,p_drugLen);           %
+t_all = tic;                              %
 
 for num = 1:p_drugLen
     num
-    t_epos = tic;   % 新增：记录当前 ePos/test drug 的运行时间
+    t_epos = tic;   %
     test_r_index = p_drugPos(num);
     ePos = find(Wdr(:,test_r_index)==weight);%-------------- for one -------------
 % %     ePos = find(Wdr(:,test_r_index)~=0);%-------------- for all -------------
     Tfnum = length(ePos);
 
-    Wdr(ePos,test_r_index)= 0;%行列坐标
+    Wdr(ePos,test_r_index)= 0;%
 		
     P_TMat = Wdr;
 %% MBiRW
@@ -125,17 +123,17 @@ M_ResultMat=WW';
     n_FPRArray = [0,FPRArray];
     n_PrecisionArray = [1,PrecisionArray];
     
-    %% ===== 当前 ePos/test drug 的 AUC、AUPR、Precision =====
+    
     RowAucValue(num) = trapz(FPRArray,TPRArray);
     RowAuPRValue(num) = trapz(TPRArray,PrecisionArray);
     RowPrecisionValue(num) = PrecisionArray(1);
     
-    % 带起点修正版本
+    % 
     n_RowAucValue(num) = trapz(n_FPRArray,n_TPRArray);
     n_RowAuPRValue(num) = trapz(n_TPRArray,n_PrecisionArray);
-    n_RowPrecisionValue(num) = n_PrecisionArray(2);  % 等价于 PrecisionArray(1)
+    n_RowPrecisionValue(num) = n_PrecisionArray(2);  % 
 
-    % 当前药物单独计算 R_m_A_AUPR_value
+    %
     Row_R_m_TPRArray = [0, TPRArray];
     Row_R_m_PreArray = [1, PrecisionArray];
     Row_R_m_A_AUPR_value(num) = trapz(Row_R_m_TPRArray, Row_R_m_PreArray);
@@ -144,9 +142,8 @@ M_ResultMat=WW';
     A_DresultMat_FPR(num,:) = FPRArray;
     A_DresultMat_Pre(num,:) = PrecisionArray;
     
-    TIME_ePos(num) = toc(t_epos);   % 新增：当前 ePos/test drug 的运行时间
+    TIME_ePos(num) = toc(t_epos);   %
     
-    % weight=1时等价于原写法；保留weight更通用
     Wdr(ePos,test_r_index) = weight;
     
 end
@@ -162,8 +159,6 @@ end
     R_m_TPRArray = [0,Result_TPRArray];%V
 R_m_PreArray = [1,Result_PreArray];%V
 R_m_A_AUPR_value = trapz(R_m_TPRArray,R_m_PreArray);%V
-
-%% ===== 新增：Denovo ePos-level mean ± SD 统计 =====
 
 Denovo_AUC_mean = mean(RowAucValue);
 Denovo_AUC_SD   = std(RowAucValue);
@@ -183,20 +178,21 @@ R_m_A_AUPR_mean_from_rows = Denovo_AUPR_mean;
 
 R_m_A_AUPR_mean_SD_text = sprintf('%.4f ± %.4f', ...
     R_m_A_AUPR_value, R_m_A_AUPR_SD);
+Denovo_AUPR_mean = R_m_A_AUPR_value;
 
 
 DenovoStats.AUC_mean = Denovo_AUC_mean;
 DenovoStats.AUC_SD = Denovo_AUC_SD;
 DenovoStats.AUPR_mean = Denovo_AUPR_mean;
 DenovoStats.AUPR_SD = Denovo_AUPR_SD;
-DenovoStats.Row_R_m_A_AUPR_value = Row_R_m_A_AUPR_value;  % 新增
+DenovoStats.Row_R_m_A_AUPR_value = Row_R_m_A_AUPR_value;  %
 DenovoStats.Precision_mean = Denovo_Precision_mean;
 DenovoStats.Precision_SD = Denovo_Precision_SD;
 
 DenovoStats.raw_AUPR_mean = Denovo_raw_AUPR_mean;
 DenovoStats.raw_AUPR_SD = Denovo_raw_AUPR_SD;
 
-% 字符串形式，小数点后4位，便于论文表格复制
+%
 DenovoStats.AUC_mean_SD_text = sprintf('%.4f ± %.4f', Denovo_AUC_mean, Denovo_AUC_SD);
 DenovoStats.AUPR_mean_SD_text = sprintf('%.4f ± %.4f', Denovo_AUPR_mean, Denovo_AUPR_SD);
 DenovoStats.Precision_mean_SD_text = sprintf('%.4f ± %.4f', Denovo_Precision_mean, Denovo_Precision_SD);
@@ -221,9 +217,7 @@ fprintf('ePos-level mean ± SD: AUC=%s, AUPR=%s, Precision=%s.\n', ...
     DenovoStats.AUC_mean_SD_text, ...
     DenovoStats.AUPR_mean_SD_text, ...
     DenovoStats.Precision_mean_SD_text);
-%% 4 测试结果保存和记录 
 
-%根据不同数据集替换 Fdataset  Cdataset CTDdataset2023
 save Fdataset_STresult_MBiRW_Denovoone ...
     p_drugLen p_drugPos parameters ...
     Result_TPRArray Result_FPRArray Result_PreArray ...
