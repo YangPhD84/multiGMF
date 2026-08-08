@@ -1,10 +1,9 @@
 %%==================== BNNR_Global ====================%%
-% ×¢Òâ£º1.rng('default')ºÍrand('state', num); %#ok<RAND>
-%       2.²ÎÊýÁ½¸öalpha beta 
+
 clear all
 addpath('code');
 rng('default');
-%% 1.ÔØÈëÊý¾Ý                                           1.ÔØÈëÊý¾Ý
+
 load Fdataset
 % load Cdataset
 % load CTDdataset2023
@@ -14,100 +13,62 @@ load Fdataset
  Wdr=didr;
  Wrd = Wdr';
 %  tic
- 
-% %% LRSSL test
-% load LRSSL_dataset
-% Wrr = (drug_Domain + drug_Go + drug_Pubchem)/3;
-% Wdd = disease_similarity;
-% Wdr = didr;
-% Wrd = Wdr';
-% tic
 
-%% T1 test
-% load T1_dataset
-% Wrr = drug_similarity;
-% Wdd = disease_similarity;
-% Wdr = didr;
-% Wrd = Wdr';
-tic
-
-% %% M test
-% load M_dataset
-% Wrr = drug_similarity;
-% Wdd = disease_similarity;
-% Wdr = didr;
-% Wrd = Wdr';
-% tic
-
-%%
-% addpath('VDdataset');
-% load drugsim;
-% load virussim;
-% load virusdrug;
-% 
-%  Wrr=virussim;
-%  Wdd=drugsim;
-%  Wdr=virusdrug;
-%  Wrd = Wdr';
-%% 2.²ÎÊý¸³Öµ                                           2. ²ÎÊý¸³Öµ 
 tol1=2*1e-3;
 tol2=1*1e-5;
 maxiter=300;
 
-
-%% 3.½øÐÐ¶à´ÎÊ®±¶½»²æÑéÖ¤                           3.½øÐÐÊ®±¶½»²æÑéÖ¤
 %%%%%%%%%%%%%% set the CV parameters %%%%%%%%%%
-Count_CV =10;     %¼¸´Î
-nCV = 10;         %Ê®±¶½»²æ
+Count_CV =10;     %
+nCV = 10;         %
 
-PosMat = find(Wdr==1);%È«²¿1
+PosMat = find(Wdr==1);%
 NumAs = length(PosMat);
 [dn,dr] = size(Wdr);
 
 T_NumAs = ceil(NumAs/nCV)*nCV;
 
-A_Result_TPRArray = zeros(Count_CV,dn);%Ò»¸öWrr¶ÔËùÓÐWdd£¨dn£©½øÐÐÅÅÃû
+A_Result_TPRArray = zeros(Count_CV,dn);%
 A_Result_FPRArray = zeros(Count_CV,dn);
 A_Result_PreArray = zeros(Count_CV,dn);
 A_AUC_values = zeros(Count_CV,1);
 A_AUPR_values = zeros(Count_CV,1);
 m_A_AUPR_values = zeros(Count_CV,1);
 
-%% ===== ÐÂÔö£ºfold-levelÖ¸±êÓëÔËÐÐÊ±¼ä¼ÇÂ¼ =====
 AUC_alone = zeros(Count_CV, nCV);
 AUPR_alone = zeros(Count_CV, nCV);
 Precision_alone = zeros(Count_CV, nCV);
 
-TIME_alone = zeros(Count_CV, nCV);        % Ã¿Ò»ÕÛÔËÐÐÊ±¼ä
-runningtime_10CV = zeros(Count_CV, 1);    % Ã¿Ò»´Î10±¶½»²æÑéÖ¤ÔËÐÐÊ±¼ä
-t_all = tic;                              % 10´Î10CV×ÜÔËÐÐÊ±¼ä
+TIME_alone = zeros(Count_CV, nCV);        % 
+runningtime_10CV = zeros(Count_CV, 1);    %
+t_all = tic;                              %
 
 for num = 1:Count_CV
     num
     rand('state', num); %#ok<RAND>
-     t_cv = tic;   % ÐÂÔö£º¼ÇÂ¼µÚnum´Î10CVÔËÐÐÊ±¼ä
+     t_cv = tic;   %
 
     random_indices = randperm(NumAs);
     random_indices(NumAs+1:T_NumAs) = 0;
     
     Indices_groups = reshape(random_indices(1:floor(length(random_indices)/nCV)*nCV), nCV, floor(length(random_indices)/nCV));
 
-    C_DresultMat_TPR = zeros(NumAs,dn);%¶ÔÃ¿¸öÑù±¾µãÇóTPRR
+    C_DresultMat_TPR = zeros(NumAs,dn);%
     C_DresultMat_FPR = zeros(NumAs,dn);
     C_DresultMat_Pre = zeros(NumAs,dn);
     
     ass_num = 1;
     
     for i = 1:nCV
-        t_fold = tic;   % ÐÂÔö£º¼ÇÂ¼µ±Ç°foldÔËÐÐÊ±¼ä
+        t_fold = tic;   %
         G_TestIds = Indices_groups(i,:);
-        G_TestIds(G_TestIds==0) = [];%%ÅÅ³ý×îºó¼¸¸ö¿ÉÄÜµÄ¿ÕÖµ
+        G_TestIds(G_TestIds==0) = [];%%
 %%%%%%%%%% Tfnum indicates the number of elements in each group %%%%%%%%%%
         Tfnum = length(G_TestIds);
-        TestIds = PosMat(G_TestIds);%%%%%%²âÊÔ¼¯ÏòÁ¿
+        TestIds = PosMat(G_TestIds);%%%%%%
  
         P_TMat = Wdr;
-        P_TMat(TestIds) = 0;%%ÑµÁ·¼¯
+        P_TMat(TestIds) = 0;%%
  
 T=[Wrr,P_TMat';P_TMat,Wdd];  
 [t1,t2]=size(T);
@@ -180,12 +141,12 @@ end
             FPRArray(result_len+1:dn) = FPRArray(result_len);
             PreArray(result_len+1:dn) = PreArray(result_len);
             
-            A_DresultMat_TPR(k,:) = TPRArray;%193*313 one foldÖÐÃ¿¸ö¹ØÁªÅÅÐòÒ»´Î
+            A_DresultMat_TPR(k,:) = TPRArray;%
             A_DresultMat_FPR(k,:) = FPRArray;
             A_DresultMat_Pre(k,:) = PreArray;
         end 
   
-        C_DresultMat_TPR(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_TPR;%1993*313 Ò»´Î10CVÖÐ ÀÛ¼Æten folds
+        C_DresultMat_TPR(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_TPR;%
         C_DresultMat_FPR(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_FPR;
         C_DresultMat_Pre(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_Pre;
         
@@ -195,7 +156,7 @@ end
 %             time_1=toc
 %         end
     end
-    A_Result_TPRArray(num,:) = mean(C_DresultMat_TPR);%10*313 Ò»´Î10CVÖÐ Æ½¾ùten folds
+    A_Result_TPRArray(num,:) = mean(C_DresultMat_TPR);%
     A_Result_FPRArray(num,:) = mean(C_DresultMat_FPR);
     A_Result_PreArray(num,:) = mean(C_DresultMat_Pre);
    
@@ -207,7 +168,7 @@ end
     runningtime_10CV(num) = toc(t_cv);
 end
 
-Result_TPRArray =mean(A_Result_TPRArray);%VV%    ¶ÔÓÚÖ»ÅÜÒ»´Î£¬È¥µômean
+Result_TPRArray =mean(A_Result_TPRArray);%VV%   
 Result_FPRArray =mean(A_Result_FPRArray);%VV
 Result_PreArray =mean(A_Result_PreArray);%VV
 
@@ -219,9 +180,7 @@ R_m_TPRArray = [0,Result_TPRArray];%V
 R_m_PreArray = [1,Result_PreArray];%V
 R_m_A_AUPR_value = trapz(R_m_TPRArray,R_m_PreArray);%V
 
-%% ===== ÐÂÔö£º10´Î10±¶½»²æÑéÖ¤µÄ mean ¡À SD Í³¼Æ =====
-% A_AUC_values / m_A_AUPR_values / Precision_values£º
-% Ã¿Ò»¸öÔªËØ¶ÔÓ¦Ò»´ÎÍêÕû10-fold CV½á¹û£¬¹² Count_CV=10 ¸öÖµ¡£
+% A_AUC_values / m_A_AUPR_values / Precision_valuesï¼š
 
 AUC_10CV_mean = mean(A_AUC_values);
 AUC_10CV_SD   = std(A_AUC_values);
@@ -229,12 +188,10 @@ AUC_10CV_SD   = std(A_AUC_values);
 AUPR_10CV_mean = mean(m_A_AUPR_values);
 AUPR_10CV_SD   = std(m_A_AUPR_values);
 
-% Ã¿´Î10CVµÄPrecisionÊ¹ÓÃ¸Ã´ÎÆ½¾ùPrecisionÇúÏßµÄµÚÒ»¸öµã
 Precision_values = A_Result_PreArray(:,1);
 Precision_10CV_mean = mean(Precision_values);
 Precision_10CV_SD   = std(Precision_values);
 
-% fold-level×ÜÌåÍ³¼Æ£º10´Î ¡Á 10ÕÛ = 100¸öfold½á¹û
 AUC_fold_mean = mean(AUC_alone(:));
 AUC_fold_SD   = std(AUC_alone(:));
 
@@ -258,14 +215,13 @@ MetricStats.AUPR_fold_SD = AUPR_fold_SD;
 MetricStats.Precision_fold_mean = Precision_fold_mean;
 MetricStats.Precision_fold_SD = Precision_fold_SD;
 
-% ×Ö·û´®ÐÎÊ½£ºÐ¡Êýµãºó4Î»£¬·½±ãÂÛÎÄ±í¸ñÖ±½Ó¸´ÖÆ
-MetricStats.AUC_10CV_mean_SD_text = sprintf('%.4f ¡À %.4f', AUC_10CV_mean, AUC_10CV_SD);
-MetricStats.AUPR_10CV_mean_SD_text = sprintf('%.4f ¡À %.4f', AUPR_10CV_mean, AUPR_10CV_SD);
-MetricStats.Precision_10CV_mean_SD_text = sprintf('%.4f ¡À %.4f', Precision_10CV_mean, Precision_10CV_SD);
+MetricStats.AUC_10CV_mean_SD_text = sprintf('%.4f Â± %.4f', AUC_10CV_mean, AUC_10CV_SD);
+MetricStats.AUPR_10CV_mean_SD_text = sprintf('%.4f Â± %.4f', AUPR_10CV_mean, AUPR_10CV_SD);
+MetricStats.Precision_10CV_mean_SD_text = sprintf('%.4f Â± %.4f', Precision_10CV_mean, Precision_10CV_SD);
 
-MetricStats.AUC_fold_mean_SD_text = sprintf('%.4f ¡À %.4f', AUC_fold_mean, AUC_fold_SD);
-MetricStats.AUPR_fold_mean_SD_text = sprintf('%.4f ¡À %.4f', AUPR_fold_mean, AUPR_fold_SD);
-MetricStats.Precision_fold_mean_SD_text = sprintf('%.4f ¡À %.4f', Precision_fold_mean, Precision_fold_SD);
+MetricStats.AUC_fold_mean_SD_text = sprintf('%.4f Â± %.4f', AUC_fold_mean, AUC_fold_SD);
+MetricStats.AUPR_fold_mean_SD_text = sprintf('%.4f Â± %.4f', AUPR_fold_mean, AUPR_fold_SD);
+MetricStats.Precision_fold_mean_SD_text = sprintf('%.4f Â± %.4f', Precision_fold_mean, Precision_fold_SD);
 
 time_all = toc(t_all);
 
@@ -278,14 +234,12 @@ parameters.maxiter=maxiter;
 fprintf('Curve-mean result: AUC=%4.4f, AUPR=%4.4f, Precision=%4.4f.\n', ...
     Result_AUC_value, R_m_A_AUPR_value, Result_Precision_value);
 
-fprintf('10CV-level mean ¡À SD: AUC=%s, AUPR=%s, Precision=%s.\n', ...
+fprintf('10CV-level mean Â± SD: AUC=%s, AUPR=%s, Precision=%s.\n', ...
     MetricStats.AUC_10CV_mean_SD_text, ...
     MetricStats.AUPR_10CV_mean_SD_text, ...
     MetricStats.Precision_10CV_mean_SD_text);
 
-%% 4 ²âÊÔ½á¹û±£´æºÍ¼ÇÂ¼     
 
-%¸ù¾Ý²»Í¬Êý¾Ý¼¯Ìæ»» Fdataset  Cdataset CTDdataset2023
 save Fdataset_STresult_BNNR_10CV_fold_results.mat ...
     time_all runningtime_10CV TIME_alone MetricStats ...
     parameters AUC_alone AUPR_alone Precision_alone ...
