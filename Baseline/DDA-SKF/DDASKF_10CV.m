@@ -1,11 +1,9 @@
 %%==================== DDASKF ====================%%
-% 注意：1.rng('default')和rand('state', num); %#ok<RAND>
-%       2.保存名称
+
 clear
 addpath('code');
 rng('default');
-
-%% 1.载入数据                                            
+                                           
 
 load Fdataset;
 % load Cdataset;
@@ -36,7 +34,7 @@ Input.lamuda = 2^(-16);
 % Input.predictSimMatdcDomain = predictSimMatdcDomain;
 % Wdr = predictAdMatdgc;%didr
 
-%C数据集测试
+%
 % Input.predictSimMatdcChemical = C_Simmatdc_chemical;
 % Input.predictSimMatdg = C_Simmatdc_dg;
 % Input.predictSimMatdcGo = C_Simmatdc_Go;
@@ -47,10 +45,10 @@ Input.lamuda = 2^(-16);
 Wrd = Wdr';
 
 Preci_ruselt = [];
-%% 3.进行多次十倍交叉验证                           3.进行十倍交叉验证
+
 %%%%%%%%%%%%%% set the CV parameters %%%%%%%%%%
-Count_CV =10;     %几次
-nCV = 10;         %十倍交叉
+Count_CV =10;     %
+nCV = 10;         %
 
 PosMat = find(Wdr==1);
 NumAs = length(PosMat);
@@ -58,64 +56,64 @@ NumAs = length(PosMat);
 
 T_NumAs = ceil(NumAs/nCV)*nCV;
 
-A_Result_TPRArray = zeros(Count_CV,dn);%一个Wrr对所有Wdd（dn）进行排名
+A_Result_TPRArray = zeros(Count_CV,dn);%
 A_Result_FPRArray = zeros(Count_CV,dn);
 A_Result_PreArray = zeros(Count_CV,dn);
 A_AUC_values = zeros(Count_CV,1);
 A_AUPR_values = zeros(Count_CV,1);
 m_A_AUPR_values = zeros(Count_CV,1);
 
-%% ===== 新增：fold-level指标与运行时间记录 =====
+
 AUC_alone = zeros(Count_CV, nCV);
 AUPR_alone = zeros(Count_CV, nCV);
 Precision_alone = zeros(Count_CV, nCV);
 
-TIME_alone = zeros(Count_CV, nCV);        % 每一折运行时间
-runningtime_10CV = zeros(Count_CV, 1);    % 每一次10倍交叉验证运行时间
-t_all = tic;                              % 10次10CV总运行时间
+TIME_alone = zeros(Count_CV, nCV);        % 
+runningtime_10CV = zeros(Count_CV, 1);    % 
+t_all = tic;                              % 
 
 for num = 1:Count_CV
     num
     rand('state', num); %#ok<RAND>
-    t_cv = tic;   % 新增：记录第num次10CV运行时间
+    t_cv = tic;   %
 
     random_indices = randperm(NumAs);
     random_indices(NumAs+1:T_NumAs) = 0;
     
     Indices_groups = reshape(random_indices(1:floor(length(random_indices)/nCV)*nCV), nCV, floor(length(random_indices)/nCV));
 
-    C_DresultMat_TPR = zeros(NumAs,dn);%对每个样本点求TPRR
+    C_DresultMat_TPR = zeros(NumAs,dn);%
     C_DresultMat_FPR = zeros(NumAs,dn);
     C_DresultMat_Pre = zeros(NumAs,dn);
     
     ass_num = 1;
     
     for i = 1:nCV
-        t_fold = tic;   % 新增：记录当前fold运行时间
+        t_fold = tic;   %
         
         G_TestIds = Indices_groups(i,:);
-        G_TestIds(G_TestIds==0) = [];%%排除最后几个可能的空值
+        G_TestIds(G_TestIds==0) = [];%%
 %%%%%%%%%% Tfnum indicates the number of elements in each group %%%%%%%%%%
         Tfnum = length(G_TestIds);
-        TestIds = PosMat(G_TestIds);%%%%%%测试集
+        TestIds = PosMat(G_TestIds);%%%%%%
  
         P_TMat = Wdr;
-        P_TMat(TestIds) = 0;%%训练集
+        P_TMat(TestIds) = 0;%%
         
 %%
 pp=1;
 ppp=1;
 
-%执行迭代函数
+
 score_matrix = DDASKF(Input, P_TMat);
 
 M_ResultMat=score_matrix;      
 
-%% 记录每次迭代终止的次数
+
 [AUC_alone(num,i),Precision_alone(num,i),AUPR_alone(num,i)]=Fun_Auc3(M_ResultMat,P_TMat,TestIds)
 TIME_alone(num,i) = toc(t_fold);
 
-%% 存储每一次各参数的值以及AUC等值
+
 AAres(1,ppp)=AUC_alone(num,i);
 AAres(2,ppp)=Precision_alone(num,i);
 AAres(3,ppp)=AUPR_alone(num,i);
@@ -123,7 +121,7 @@ AAres(3,ppp)=AUPR_alone(num,i);
 ppp=ppp+1;
 
 
-%% 方便查看每折之后的Precision值
+
 Preci_calues = Precision_alone(num,i);
 Preci_ruselt = [Preci_ruselt,Preci_calues];
 
@@ -183,12 +181,12 @@ Preci_ruselt = [Preci_ruselt,Preci_calues];
             FPRArray(result_len+1:dn) = FPRArray(result_len);
             PreArray(result_len+1:dn) = PreArray(result_len);
             
-            A_DresultMat_TPR(k,:) = TPRArray;%193*313 one fold中每个关联排序一次
+            A_DresultMat_TPR(k,:) = TPRArray;
             A_DresultMat_FPR(k,:) = FPRArray;
             A_DresultMat_Pre(k,:) = PreArray;
         end 
   
-        C_DresultMat_TPR(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_TPR;%1993*313 一次10CV中 累计ten folds
+        C_DresultMat_TPR(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_TPR;
         C_DresultMat_FPR(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_FPR;
         C_DresultMat_Pre(ass_num:ass_num+Tfnum-1,:) = A_DresultMat_Pre;
         
@@ -197,7 +195,7 @@ Preci_ruselt = [Preci_ruselt,Preci_calues];
             time_1 = TIME_alone(num,i);
         end
     end
-    A_Result_TPRArray(num,:) = mean(C_DresultMat_TPR);%一次10CV中 平均ten folds
+    A_Result_TPRArray(num,:) = mean(C_DresultMat_TPR);%
     A_Result_FPRArray(num,:) = mean(C_DresultMat_FPR);
     A_Result_PreArray(num,:) = mean(C_DresultMat_Pre);
    
@@ -208,13 +206,12 @@ Preci_ruselt = [Preci_ruselt,Preci_calues];
     m_A_AUPR_values(num,:) = trapz(m_TPRArray,m_PreArray)
     runningtime_10CV(num) = toc(t_cv);
 
-    %% 杨斌加
     Precision_values(num,:) = mean(Precision_alone(num,:));
-    %% 查看一折十次之后各参数和AUC等值
+    
 %     parameter(pp,1:5) = [A_AUC_values(num,:),Precision_values(num,:),m_A_AUPR_values(num,:),A_AUC_values(num,:) + m_A_AUPR_values(num,:),A_AUC_values(num,:) + Precision_values(num,:),A_AUC_values(num,:) + m_A_AUPR_values(num,:) + Precision_values(num,:)];
 end
 
-Result_TPRArray =mean(A_Result_TPRArray);%VV%    对于只跑一次，去掉mean
+Result_TPRArray =mean(A_Result_TPRArray);%VV%
 Result_FPRArray =mean(A_Result_FPRArray);%VV
 Result_PreArray =mean(A_Result_PreArray);%VV
 
@@ -226,9 +223,8 @@ R_m_TPRArray = [0,Result_TPRArray];%V
 R_m_PreArray = [1,Result_PreArray];%V
 R_m_A_AUPR_value = trapz(R_m_TPRArray,R_m_PreArray);%V
 
-%% ===== 新增：10次10倍交叉验证的 mean ± SD 统计 =====
 % A_AUC_values / m_A_AUPR_values / Precision_values：
-% 每一行对应一次完整10-fold CV，因此共有 Count_CV=10 个结果。
+
 
 AUC_10CV_mean = mean(A_AUC_values);
 AUC_10CV_SD   = std(A_AUC_values);
@@ -239,7 +235,6 @@ AUPR_10CV_SD   = std(m_A_AUPR_values);
 Precision_10CV_mean = mean(Precision_values);
 Precision_10CV_SD   = std(Precision_values);
 
-% fold-level总体统计：10次 × 10折 = 100个fold结果
 AUC_fold_mean = mean(AUC_alone(:));
 AUC_fold_SD   = std(AUC_alone(:));
 
@@ -249,7 +244,6 @@ AUPR_fold_SD   = std(AUPR_alone(:));
 Precision_fold_mean = mean(Precision_alone(:));
 Precision_fold_SD   = std(Precision_alone(:));
 
-% 结构体保存，便于后续 load mat 文件后读取
 MetricStats.AUC_10CV_mean = AUC_10CV_mean;
 MetricStats.AUC_10CV_SD = AUC_10CV_SD;
 MetricStats.AUPR_10CV_mean = AUPR_10CV_mean;
@@ -264,7 +258,6 @@ MetricStats.AUPR_fold_SD = AUPR_fold_SD;
 MetricStats.Precision_fold_mean = Precision_fold_mean;
 MetricStats.Precision_fold_SD = Precision_fold_SD;
 
-% 字符串形式，默认小数点后4位，方便论文表格直接复制
 MetricStats.AUC_10CV_mean_SD_text = sprintf('%.4f ± %.4f', AUC_10CV_mean, AUC_10CV_SD);
 MetricStats.AUPR_10CV_mean_SD_text = sprintf('%.4f ± %.4f', AUPR_10CV_mean, AUPR_10CV_SD);
 MetricStats.Precision_10CV_mean_SD_text = sprintf('%.4f ± %.4f', Precision_10CV_mean, Precision_10CV_SD);
@@ -283,9 +276,6 @@ fprintf('10CV-level mean ± SD: AUC=%s, AUPR=%s, Precision=%s.\n', ...
     MetricStats.AUPR_10CV_mean_SD_text, ...
     MetricStats.Precision_10CV_mean_SD_text);
 
-%% 4 测试结果保存和记录    
-
-%根据不同数据集替换 Fdataset  Cdataset CTDdataset2023
 save Fdataset_STresult_DDASKF_10CV_fold_results.mat ...
     time_1 time_all runningtime_10CV TIME_alone MetricStats ...
     AUC_alone AUPR_alone Precision_alone AAres ...
