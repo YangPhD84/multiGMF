@@ -211,10 +211,9 @@ end
     parameters.tol1=tol1;
     parameters.tol2=tol2;
     parameters.maxiter=maxiter;
-    
-%% 4 测试结果保存和记录     
+     
 
-%根据不同数据集替换 Fdataset  Cdataset CTDdataset2023
+%
 save Fdataset_STresult_BNNR_Denovoone.mat ...
     p_drugLen p_drugPos parameters ...
     Result_TPRArray Result_FPRArray Result_PreArray ...
