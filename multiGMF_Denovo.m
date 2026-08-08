@@ -259,6 +259,8 @@ R_m_A_AUPR_mean_from_rows = Denovo_AUPR_mean;
 R_m_A_AUPR_mean_SD_text = sprintf('%.4f ± %.4f', ...
     R_m_A_AUPR_value, R_m_A_AUPR_SD);
 
+Denovo_AUPR_mean = R_m_A_AUPR_value;
+
 %% ===== Store summary statistics =====
 
 DenovoStats.AUC_mean = Denovo_AUC_mean;
