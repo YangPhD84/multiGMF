@@ -1,12 +1,10 @@
 %%======================== De novo ========================%%
-% %注意：1.weight的取值
-%        2.denovo for one和de novo for all
-%        3.save 名称（方法_方案_数据）
+
 clear
 % addpath('code');
 addpath('Datasets');
 rng('default');
-%% 1.载入数据                                            
+                                           
 load Fdataset
 % load Cdataset 
 % load CTDdataset2023
@@ -27,11 +25,9 @@ tic
  Wrr=(drug_ChemS+drug_AtcS+drug_TargetS)/3;
  Wdd=(disease_PhS+disease_DoS)/2;
 
-%% 2.参数赋值                                           2. 参数赋值 
-
 
 %% Fdataset  knn = 10 tau = 0.7 lambda_soft= 1 lambda1= 0.0001 lambda3= 1
-Options.MaxIter=300; %迭代次数
+Options.MaxIter=300; %
 lambda_soft= 1;
 lambda1= 0.0001;%0.0001
 lambda2 = lambda1;
@@ -57,7 +53,7 @@ KNN_K = 10;%10
 % tau = 0.7;
 % KNN_K = 10;
 
-out_t = [];%记录每次迭代终止的次数
+out_t = [];%
 
 Options.lambda_soft=lambda_soft;
 Options.lambda1=lambda1;
@@ -96,13 +92,13 @@ t_all = tic;
 
 for num = 1:p_drugLen
     num
-    t_epos = tic;   % 新增：记录当前 ePos/test drug 的运行时间
+    t_epos = tic;   
     test_r_index = p_drugPos(num);
     ePos = find(Wdr(:,test_r_index)==1);%-------------- for one -------------
     % %     ePos = find(Wdr(:,test_r_index)~=0);%-------------- for all -------------
     Tfnum = length(ePos);
     
-    Wdr(ePos,test_r_index)= 0;%行列坐标
+    Wdr(ePos,test_r_index)= 0;%
     
     P_TMat = Wdr;
     
@@ -113,23 +109,19 @@ Input.B={disease_PhS,disease_DoS};
 
 Input.Wdr = Wdr;
 
-%低秩矩阵初始化
 
 min_mn = min(dn,dr);
 rankk = floor(min_mn*tau);
 Input.HInit = rand(dn,rankk);
 Input.WInit = rand(dr,rankk);
 
-%WKNN处理
-
+%
 Input.kk = KNN_K;
 
 Input.X = Wdr;
 Input.Wrr = Wrr;
 Input.Wdd = Wdd;
 Input.P_TMat = P_TMat';
-
-% % 单相似性对比 R1\R2\R5
 
 % R1
 % Input.A = {drug_ChemS};
@@ -143,11 +135,10 @@ Input.P_TMat = P_TMat';
 % Input.A = {drug_TargetS};
 % Input.Wrr = drug_TargetS;
 
-%执行迭代函数
 Output = fmultiGMF(Input, Options);
 % Output = no_soft_fmultiGMF(Input, Options);
 
-%矩阵填充复原
+%
 WW=Output.W*Output.H';
 M_ResultMat=WW';   
 
@@ -315,7 +306,6 @@ fprintf('ePos-level mean ± SD: AUC=%s, AUPR=%s, Precision=%s.\n', ...
     DenovoStats.Precision_mean_SD_text);
 
 % save matlab
-%% 4 测试结果保存和记录
 
 save Fdataset_STresult_multiGMF_Denovoone.mat ...
     p_drugLen p_drugPos parameters ...
