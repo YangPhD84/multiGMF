@@ -121,7 +121,6 @@ for num = 1:p_drugLen
     n_FPRArray = [0,FPRArray];
     n_PrecisionArray = [1,PrecisionArray];
     
-    %% ===== 当前 ePos/test drug 的 AUC、AUPR、Precision =====
     RowAucValue(num) = trapz(FPRArray,TPRArray);
     RowAuPRValue(num) = trapz(TPRArray,PrecisionArray);
     RowPrecisionValue(num) = PrecisionArray(1);
@@ -129,9 +128,8 @@ for num = 1:p_drugLen
     % 
     n_RowAucValue(num) = trapz(n_FPRArray,n_TPRArray);
     n_RowAuPRValue(num) = trapz(n_TPRArray,n_PrecisionArray);
-    n_RowPrecisionValue(num) = n_PrecisionArray(2);  % 等价于 PrecisionArray(1)
+    n_RowPrecisionValue(num) = n_PrecisionArray(2);  %
 
-     % 当前药物单独计算 R_m_A_AUPR_value
     Row_R_m_TPRArray = [0, TPRArray];
     Row_R_m_PreArray = [1, PrecisionArray];
     Row_R_m_A_AUPR_value(num) = trapz(Row_R_m_TPRArray, Row_R_m_PreArray);
@@ -180,7 +178,7 @@ DenovoStats.AUC_mean = Denovo_AUC_mean;
 DenovoStats.AUC_SD = Denovo_AUC_SD;
 DenovoStats.AUPR_mean = Denovo_AUPR_mean;
 DenovoStats.AUPR_SD = Denovo_AUPR_SD;
-DenovoStats.Row_R_m_A_AUPR_value = Row_R_m_A_AUPR_value; % 新增
+DenovoStats.Row_R_m_A_AUPR_value = Row_R_m_A_AUPR_value; %
 DenovoStats.Precision_mean = Denovo_Precision_mean;
 DenovoStats.Precision_SD = Denovo_Precision_SD;
 DenovoStats.raw_AUPR_mean = Denovo_raw_AUPR_mean;
@@ -193,6 +191,7 @@ R_m_A_AUPR_SD = Denovo_AUPR_SD;
 R_m_A_AUPR_mean_from_rows = Denovo_AUPR_mean;
 R_m_A_AUPR_mean_SD_text = sprintf('%.4f ± %.4f', ...
     R_m_A_AUPR_value, R_m_A_AUPR_SD);
+Denovo_AUPR_mean = R_m_A_AUPR_value;
 
 %
 DenovoStats.AUC_mean_SD_text = sprintf('%.4f ± %.4f', Denovo_AUC_mean, Denovo_AUC_SD);
@@ -232,9 +231,7 @@ fprintf('ePos-level mean ± SD: AUC=%s, AUPR=%s, Precision=%s.\n', ...
 fprintf('Manuscript-reported AUPR: %s.\n', ...
     R_m_A_AUPR_mean_SD_text);
 
-%% 4 测试结果保存和记录
 
-%根据不同数据集替换 Fdataset  Cdataset CTDdataset2023
 save Fdataset_STresult_MSBMF_Denovoone.mat ...
     p_drugLen p_drugPos parameters ...
     Result_TPRArray Result_FPRArray Result_PreArray ...
